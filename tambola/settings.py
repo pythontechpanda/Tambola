@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'tambolaapp',
     'rest_framework',  #<----
     'rest_framework_simplejwt.token_blacklist', #<----
@@ -60,7 +61,9 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -137,8 +140,37 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 STATICFILES_DIRS = [STATIC_DIR]
 STATIC_URL = 'static/'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'POST',
+    'GET',
+    'PATCH',
+    'PUT'
+]
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS =['http://localhost:3000']
+CORS_ALLOW_ORIGINS =[
+    'http://127.0.0.1:3000',
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://teammember.techpanda.art"
+]
+CORS_ALLOW_HEADERS = ['*']
+REST_SAFE_LIST_IPS =[
+    '127.0.0.1',
+]
+
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
