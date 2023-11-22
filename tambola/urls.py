@@ -18,13 +18,23 @@ from django.contrib import admin
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from tambolaapp import views
+from django.conf import settings  
+from django.conf.urls.static import static
 
 router = DefaultRouter()
-router.register('user', views.UserView, basename='user'),
-router.register('city', views.CityView, basename='city'),
+router.register('User', views.UserView, basename='User'),
+router.register('City', views.CityView, basename='City'),
+router.register('Game_Rule', views.Game_RuleView, basename='Game_Rule'),
+router.register('NewGame', views.NewGameView, basename='NewGame'),
+router.register('RuleInGame', views.RuleInGameView, basename='RuleInGame'),
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin-panel/', include("myadmin.urls")),
     path('', include(router.urls)),
-    path('api/', include('tambolaapp.urls')),
-]
+    path('api/', include('tambolaapp.urls')),]
+
+
+if settings.DEBUG:  
+        urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) 

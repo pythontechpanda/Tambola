@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'myadmin',
     'corsheaders',
     'tambolaapp',
     'rest_framework',  #<----
-    'rest_framework_simplejwt.token_blacklist', #<----
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 REST_FRAMEWORK = {
@@ -52,12 +53,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=36500),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=36500),
 }
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -137,10 +136,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [STATIC_DIR]
 STATIC_URL = 'static/'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+MEDIA_URL = '/media/'
+
 
 
 

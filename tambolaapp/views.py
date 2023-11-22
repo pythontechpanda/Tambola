@@ -127,3 +127,143 @@ class CityView(viewsets.ViewSet):
         stu = City.objects.get(pk=id)
         stu.delete()
         return Response({'msg': 'Data deleted'})
+
+
+class Game_RuleView(viewsets.ViewSet):
+    def list(self, request):      # list - get all record
+        stu = Game_Rule.objects.all()
+        serializer = Game_RuleSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = Game_Rule.objects.get(id=id)
+            serializer = Game_RuleSerializer(stu)
+            return Response(serializer.data)
+
+    # def create(self, request):
+    #     serializer = Game_RuleSerializer(data = request.data)  # form data conviert in json data
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         print(serializer.data)
+    #         return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = Game_Rule.objects.get(pk=id)
+        serializer = Game_RuleSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = Game_Rule.objects.get(pk=id)
+        serializer = Game_RuleSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = Game_Rule.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+
+class NewGameView(viewsets.ViewSet):
+    def list(self, request):      # list - get all record
+        stu = NewGame.objects.all()
+        serializer = NewGameSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = NewGame.objects.get(id=id)
+            serializer = NewGameSerializer(stu)
+            return Response(serializer.data)
+
+    # def create(self, request):
+    #     serializer = NewGameSerializer(data = request.data)  # form data conviert in json data
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         print(serializer.data)
+    #         return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = NewGame.objects.get(pk=id)
+        serializer = NewGameSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = NewGame.objects.get(pk=id)
+        serializer = NewGameSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = NewGame.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+    
+class RuleInGameView(viewsets.ViewSet):
+    def list(self, request):      # list - get all record
+        stu = RuleInGame.objects.all()
+        serializer = RuleInGameSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = RuleInGame.objects.get(id=id)
+            serializer = RuleInGameSerializer(stu)
+            return Response(serializer.data)
+
+    # def create(self, request):
+    #     serializer = RuleInGameSerializer(data = request.data)  # form data conviert in json data
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         print(serializer.data)
+    #         return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = RuleInGame.objects.get(pk=id)
+        serializer = RuleInGameSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = RuleInGame.objects.get(pk=id)
+        serializer = RuleInGameSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = RuleInGame.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+    
