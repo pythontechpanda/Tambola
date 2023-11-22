@@ -24,12 +24,19 @@ from django.conf.urls.static import static
 router = DefaultRouter()
 # router.register('register', views.UserCreation, basename='register')
 
+from django.urls import path,include
+from rest_framework.routers import DefaultRouter
+from tambolaapp import views
+
+router = DefaultRouter()
+router.register('user', views.UserView, basename='user'),
+router.register('city', views.CityView, basename='city'),
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('admin-panel/', include("myadmin.urls")),
-    path('api', include("tambolaapp.urls")),
+    path('api/', include('tambolaapp.urls')),
 ]
 
 

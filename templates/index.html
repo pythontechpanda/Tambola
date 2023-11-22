@@ -148,13 +148,13 @@
                         </li> {% endcomment %}
                         <li class="icons dropdown"><a href="javascript:void(0)" data-toggle="dropdown">
                                 <i class="mdi mdi-bell-outline"></i>
-                                <span class="badge badge-pill gradient-2">3</span>
+                                <span class="badge badge-pill gradient-2">{{ pending }}</span>
                             </a>
                             <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
                                 <div class="dropdown-content-heading d-flex justify-content-between">
-                                    <span class="">2 New Notifications</span>  
+                                    <span class="">{{ pending }} New Notifications</span>  
                                     <a href="javascript:void()" class="d-inline-block">
-                                        <span class="badge badge-pill gradient-2">5</span>
+                                        <span class="badge badge-pill gradient-2">{{ pending }}</span>
                                     </a>
                                 </div>
                                 <div class="dropdown-content-body">
@@ -200,7 +200,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="icons dropdown d-none d-md-flex">
+                        {% comment %} <li class="icons dropdown d-none d-md-flex">
                             <a href="javascript:void(0)" class="log-user"  data-toggle="dropdown">
                                 <span>English</span>  <i class="fa fa-angle-down f-s-14" aria-hidden="true"></i>
                             </a>
@@ -212,7 +212,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </li>
+                        </li> {% endcomment %}
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
                                 <span class="activity active"></span>
@@ -283,15 +283,14 @@
                             <li><a href="layout-fixed-sidebar.html">Fixed Sidebar</a></li>-->
                         </ul>
                     </li>
-                    <li class="nav-label">Apps</li>
+                    {% comment %} <li class="nav-label">Apps</li> {% endcomment %}
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-envelope menu-icon"></i> <span class="nav-text">Email</span>
+                            <i class="icon-envelope menu-icon"></i> <span class="nav-text">City</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="email-inbox.html">Inbox</a></li>
-                            <li><a href="email-read.html">Read</a></li>
-                            <li><a href="email-compose.html">Compose</a></li>
+                            <li><a href="/admin-panel/new-city/">New City</a></li>
+                            <li><a href="/admin-panel/city-table/">Show City</a></li>
                         </ul>
                     </li>
                     <li>
@@ -819,6 +818,19 @@
 
 
     <script src="{% static 'js/dashboard/dashboard-1.js' %}"></script>
+    <script>
+        // code for mirror field in register
+        const ogInput = document.getElementById("val-currency")
+        const mirrorInput = document.getElementById("val-username")
+
+        ogInput.addEventListener("input", () => {
+        mirrorInput.value = ogInput.value
+        })
+    </script>
+
+
+
+    
 
 </body>
 
