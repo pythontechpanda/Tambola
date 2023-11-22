@@ -35,7 +35,7 @@ class LoginSerializer(serializers.ModelSerializer):
         return randomNumber
     class Meta:
         model = User
-        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18','otp','tokens']
+        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18','refer_code','refer_by','otp','tokens']
     def validate(self, attrs):
         username = attrs.get('username','')
         # password = attrs.get('password','')
@@ -56,6 +56,8 @@ class LoginSerializer(serializers.ModelSerializer):
                 'mobile_no':user.mobile_no,
                 'is_verified':user.is_verified,
                 'is_above18':user.is_above18,
+                'refer_code':user.refer_code,
+                'refer_by':user.refer_by,
                 'tokens': user.tokens
             }
         except:
@@ -77,6 +79,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+        depth = 1
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -87,13 +90,26 @@ class Game_RuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game_Rule
         fields = '__all__'
+        depth = 2
 
 class NewGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewGame
         fields = '__all__'
+        depth = 2
 
 class RuleInGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = RuleInGame
+        fields = '__all__'
+        depth = 2
+
+class HelpAndSupportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HelpAndSupport
+        fields = '__all__'
+
+class PageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
         fields = '__all__'

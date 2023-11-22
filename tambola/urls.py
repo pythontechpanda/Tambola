@@ -27,6 +27,8 @@ router.register('City', views.CityView, basename='City'),
 router.register('Game_Rule', views.Game_RuleView, basename='Game_Rule'),
 router.register('NewGame', views.NewGameView, basename='NewGame'),
 router.register('RuleInGame', views.RuleInGameView, basename='RuleInGame'),
+router.register('HelpAndSupport', views.HelpAndSupportView, basename='HelpAndSupport'),
+
 
 
 urlpatterns = [

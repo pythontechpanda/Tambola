@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'tambolaapp',
     'rest_framework',  #<----
     'rest_framework_simplejwt.token_blacklist',
+    'ckeditor'
 ]
 
 REST_FRAMEWORK = {

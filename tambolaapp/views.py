@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 from rest_framework import viewsets
 from .models import *
+from rest_framework.views import APIView
 
 
 # Create your views here.
@@ -37,6 +38,7 @@ class LogoutAPIView(generics.GenericAPIView):
         return Response(serializer.data,status=status.HTTP_204_NO_CONTENT)
 
 class UserView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record
         stu = User.objects.all()
         serializer = UserSerializer(stu, many=True)    # many use for bulk data come 
@@ -130,6 +132,7 @@ class CityView(viewsets.ViewSet):
 
 
 class Game_RuleView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record
         stu = Game_Rule.objects.all()
         serializer = Game_RuleSerializer(stu, many=True)    # many use for bulk data come 
@@ -176,6 +179,7 @@ class Game_RuleView(viewsets.ViewSet):
         return Response({'msg': 'Data deleted'})
 
 class NewGameView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record
         stu = NewGame.objects.all()
         serializer = NewGameSerializer(stu, many=True)    # many use for bulk data come 
@@ -222,6 +226,7 @@ class NewGameView(viewsets.ViewSet):
         return Response({'msg': 'Data deleted'})
     
 class RuleInGameView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record
         stu = RuleInGame.objects.all()
         serializer = RuleInGameSerializer(stu, many=True)    # many use for bulk data come 
@@ -267,3 +272,61 @@ class RuleInGameView(viewsets.ViewSet):
         stu.delete()
         return Response({'msg': 'Data deleted'})
     
+    
+class HelpAndSupportView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = HelpAndSupport.objects.all()
+        serializer = HelpAndSupportSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = HelpAndSupport.objects.get(id=id)
+            serializer = HelpAndSupportSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = HelpAndSupportSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = HelpAndSupport.objects.get(pk=id)
+        serializer = HelpAndSupportSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = HelpAndSupport.objects.get(pk=id)
+        serializer = HelpAndSupportSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = HelpAndSupport.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+
+class PageView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request,uid):
+        print('uid',uid)
+        uid_main=uid.replace('_', ' ')
+        if Page.objects.filter(title=uid_main).exists():
+            obj=Page.objects.filter(title=uid_main)
+            serializer = PageSerializer(obj,many=True)
+            return Response(serializer.data)
+        else:
+            raise AuthenticationFailed('Invalid credentials, try again')

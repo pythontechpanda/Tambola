@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from rest_framework_simplejwt.tokens import RefreshToken
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 class City(models.Model):
@@ -14,6 +15,8 @@ class User(AbstractUser):
     mobile_no=models.CharField(max_length=50,null=True,unique=True)
     gender=models.CharField(max_length=50,null=True)
     city=models.ForeignKey(City,on_delete=models.CASCADE, null=True)
+    refer_by=models.CharField(max_length=100,default='admin')
+    refer_code=models.CharField(max_length=50,default=0)
     is_verified=models.BooleanField(default=False)
     is_above18=models.BooleanField(default=False)
 
@@ -42,10 +45,11 @@ class NewGame(models.Model):
     message_for_player=models.TextField()
     lobby=models.CharField(max_length=50,null=True)
     user=models.ForeignKey(User,on_delete=models.CASCADE, null=True)
-    ticket_cost=models.CharField(max_length=50)
+    ticket_cost=models.CharField(max_length=50,default=0)
     start_at=models.DateTimeField()
     ticket_request_till=models.DateTimeField()
     number_of_tickets=models.CharField(max_length=50,null=True)
+    timer=models.CharField(max_length=50)
     is_completed=models.BooleanField(default=False)
     created_at=models.DateTimeField(auto_now=True)
 
@@ -61,4 +65,22 @@ class RuleInGame(models.Model):
     total_cost=models.CharField(max_length=50)
     created_at=models.DateTimeField(auto_now=True)
 
+
+class HelpAndSupport(models.Model):
+    subject=models.CharField(max_length=50)
+    description=models.TextField()
+    screenshot=models.FileField(upload_to ='helpandsupport', default='helpandsupport/helpandsupport.png')
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    created_at=models.DateTimeField(auto_now=True)
     
+    def __str__(self):
+        return self.subject
+    
+class Page(models.Model):
+    title=models.CharField(max_length=50,unique=True)
+    content=RichTextField(null=True)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    created_at=models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.title
