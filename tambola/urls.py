@@ -28,7 +28,10 @@ router.register('Game_Rule', views.Game_RuleView, basename='Game_Rule'),
 router.register('NewGame', views.NewGameView, basename='NewGame'),
 router.register('RuleInGame', views.RuleInGameView, basename='RuleInGame'),
 router.register('HelpAndSupport', views.HelpAndSupportView, basename='HelpAndSupport'),
-
+router.register('AddMoney', views.AddMoneyView, basename='AddMoney'),
+router.register('WalletAdd', views.WalletAddView, basename='WalletAdd'),
+router.register('WalletAmt', views.WalletAmtView, basename='WalletAmt'),
+router.register('PayByWalletAmount', views.PayByWalletAmountView, basename='PayByWalletAmount'),
 
 
 urlpatterns = [

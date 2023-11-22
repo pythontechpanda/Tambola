@@ -330,3 +330,193 @@ class PageView(APIView):
             return Response(serializer.data)
         else:
             raise AuthenticationFailed('Invalid credentials, try again')
+
+    
+class AddMoneyView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = AddMoney.objects.all()
+        serializer = AddMoneySerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = AddMoney.objects.get(id=id)
+            serializer = AddMoneySerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = AddMoneySerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = AddMoney.objects.get(pk=id)
+        serializer = AddMoneySerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = AddMoney.objects.get(pk=id)
+        serializer = AddMoneySerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = AddMoney.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+
+
+    
+class WalletAddView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = WalletAdd.objects.all()
+        serializer = WalletAddSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = WalletAdd.objects.get(id=id)
+            serializer = WalletAddSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = WalletAddSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = WalletAdd.objects.get(pk=id)
+        serializer = WalletAddSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = WalletAdd.objects.get(pk=id)
+        serializer = WalletAddSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = WalletAdd.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+    
+    
+class WalletAmtView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = WalletAmt.objects.all()
+        serializer = WalletAmtSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = WalletAmt.objects.get(id=id)
+            serializer = WalletAmtSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = WalletAmtSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = WalletAmt.objects.get(pk=id)
+        serializer = WalletAmtSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = WalletAmt.objects.get(pk=id)
+        serializer = WalletAmtSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = WalletAmt.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+
+
+    
+class PayByWalletAmountView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = PayByWalletAmount.objects.all()
+        serializer = PayByWalletAmountSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = PayByWalletAmount.objects.get(id=id)
+            serializer = PayByWalletAmountSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = PayByWalletAmountSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = PayByWalletAmount.objects.get(pk=id)
+        serializer = PayByWalletAmountSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = PayByWalletAmount.objects.get(pk=id)
+        serializer = PayByWalletAmountSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = PayByWalletAmount.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})

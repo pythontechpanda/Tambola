@@ -35,7 +35,7 @@ class LoginSerializer(serializers.ModelSerializer):
         return randomNumber
     class Meta:
         model = User
-        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18','refer_code','refer_by','otp','tokens']
+        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18','refer_code','refer_by','my_code','otp','tokens']
     def validate(self, attrs):
         username = attrs.get('username','')
         # password = attrs.get('password','')
@@ -58,6 +58,7 @@ class LoginSerializer(serializers.ModelSerializer):
                 'is_above18':user.is_above18,
                 'refer_code':user.refer_code,
                 'refer_by':user.refer_by,
+                'my_code':user.my_code,
                 'tokens': user.tokens
             }
         except:
@@ -112,4 +113,24 @@ class HelpAndSupportSerializer(serializers.ModelSerializer):
 class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
+        fields = '__all__'
+
+class AddMoneySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddMoney
+        fields = '__all__'
+
+class WalletAddSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WalletAdd
+        fields = '__all__'
+
+class WalletAmtSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WalletAmt
+        fields = '__all__'
+
+class PayByWalletAmountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PayByWalletAmount
         fields = '__all__'

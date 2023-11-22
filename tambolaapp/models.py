@@ -3,6 +3,12 @@ from django.contrib.auth.models import AbstractUser
 from rest_framework_simplejwt.tokens import RefreshToken
 from ckeditor.fields import RichTextField
 
+import string
+import random
+N = 7
+res = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
+var =str(res)
+
 # Create your models here.
 class City(models.Model):
     city_name=models.CharField(max_length=100)
@@ -15,6 +21,7 @@ class User(AbstractUser):
     mobile_no=models.CharField(max_length=50,null=True,unique=True)
     gender=models.CharField(max_length=50,null=True)
     city=models.ForeignKey(City,on_delete=models.CASCADE, null=True)
+    my_code=models.CharField(max_length=100,default=var)
     refer_by=models.CharField(max_length=100,default='admin')
     refer_code=models.CharField(max_length=50,default=0)
     is_verified=models.BooleanField(default=False)
@@ -84,3 +91,32 @@ class Page(models.Model):
     
     def __str__(self):
         return self.title
+    
+class AddMoney(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    add_date = models.DateTimeField(auto_now=True)
+    add_status = models.BooleanField(default=False)
+    add_price = models.CharField(max_length=200, null=True)
+    razor_pay_order_id = models.CharField(max_length=100, null=True, blank=True)
+    razor_pay_payment_id = models.CharField(max_length=100, null=True, blank=True)
+    razor_pay_payment_signature = models.CharField(max_length=100, null=True, blank=True)
+
+class WalletAdd(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    walletamount=models.IntegerField()
+    wallettime=models.DateTimeField(auto_now_add=True)
+    walletstatus=models.BooleanField(default=False)
+
+class WalletAmt(models.Model):
+    walt = models.ForeignKey(WalletAdd,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    use_date = models.DateTimeField(auto_now=True)
+    payment_status = models.BooleanField(default=False)
+    amount = models.CharField(max_length=200, null=True)
+    razor_pay_order_id = models.CharField(max_length=100, null=True, blank=True)
+    razor_pay_payment_id = models.CharField(max_length=100, null=True, blank=True)
+    razor_pay_payment_signature = models.CharField(max_length=100, null=True, blank=True)
+
+class PayByWalletAmount(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    walletid = models.CharField(max_length=100)
