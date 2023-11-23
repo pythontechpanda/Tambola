@@ -38,7 +38,6 @@ class LogoutAPIView(generics.GenericAPIView):
         return Response(serializer.data,status=status.HTTP_204_NO_CONTENT)
 
 class UserView(viewsets.ViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record
         stu = User.objects.all()
         serializer = UserSerializer(stu, many=True)    # many use for bulk data come 
@@ -272,7 +271,17 @@ class RuleInGameView(viewsets.ViewSet):
         stu.delete()
         return Response({'msg': 'Data deleted'})
     
-    
+class RuleInGameFilterView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request,id):
+
+        if RuleInGame.objects.filter(game_id=id).exists():
+            obj=RuleInGame.objects.filter(game_id=id)
+            serializer = RuleInGameSerializer(obj,many=True)
+            return Response(serializer.data)
+        else:
+            raise AuthenticationFailed('Invalid credentials, try again')
+
 class HelpAndSupportView(viewsets.ViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record

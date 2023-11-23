@@ -97,7 +97,6 @@ class NewGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewGame
         fields = '__all__'
-        depth = 2
 
 class RuleInGameSerializer(serializers.ModelSerializer):
     class Meta:

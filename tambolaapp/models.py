@@ -6,14 +6,18 @@ from ckeditor.fields import RichTextField
 import string
 import random
 N = 7
-res = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
-var =str(res)
+user_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
+var =str(user_code)
+
+game_code = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
+game_code_var =str(game_code)
 
 # Create your models here.
 class City(models.Model):
     city_name=models.CharField(max_length=100)
     def __str__(self):
         return self.city_name
+    
 class User(AbstractUser):
     profile_picture=models.FileField(upload_to ='profile', default='profile/user.png')
     otp=models.CharField(max_length=50,null=True)
@@ -57,6 +61,7 @@ class NewGame(models.Model):
     ticket_request_till=models.DateTimeField()
     number_of_tickets=models.CharField(max_length=50,null=True)
     timer=models.CharField(max_length=50)
+    private_code=models.CharField(max_length=100,default=game_code_var)
     is_completed=models.BooleanField(default=False)
     created_at=models.DateTimeField(auto_now=True)
 

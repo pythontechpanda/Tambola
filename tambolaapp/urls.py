@@ -12,4 +12,6 @@ urlpatterns = [
     path('logout/', views.LogoutAPIView.as_view(), name="logout"),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('page/<str:uid>/',views.PageView.as_view(),name="page"),
+    path('RuleInGameFilter/<int:id>/',views.RuleInGameFilterView.as_view(),name="RuleInGameFilter"),
+
 ]
