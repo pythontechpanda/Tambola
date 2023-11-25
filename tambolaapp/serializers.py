@@ -97,6 +97,12 @@ class NewGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewGame
         fields = '__all__'
+        depth = 2
+        
+class NewGamePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewGame
+        fields = '__all__'
 
 class RuleInGameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -133,3 +139,139 @@ class PayByWalletAmountSerializer(serializers.ModelSerializer):
     class Meta:
         model = PayByWalletAmount
         fields = '__all__'
+
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = '__all__'
+
+class ComplimentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Compliment
+        fields = '__all__'
+        depth =2
+
+class ComplimentPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Compliment
+        fields = '__all__'
+
+class UpcomingSerializer(serializers.Serializer):
+    game_id=serializers.IntegerField()
+    game_name=serializers.CharField(max_length=100)
+    message_for_player=serializers.CharField(max_length=255)
+    lobby=serializers.CharField(max_length=25)
+    ticket_cost=serializers.CharField(max_length=25)
+    start_at=serializers.DateTimeField()
+    ticket_request_till=serializers.DateTimeField()
+    number_of_ticket=serializers.IntegerField()
+    timer=serializers.CharField(max_length=255)
+    private_code=serializers.CharField(max_length=255)
+    # game_counter=serializers.CharField(max_length=255)
+    is_completed=serializers.BooleanField()
+    # created_at=serializers.BooleanField()
+    user_id= serializers.IntegerField()
+    first_name= serializers.CharField(max_length=255)
+    username= serializers.CharField(max_length=255)
+    profile_picture=serializers.CharField(max_length=255)
+    city=serializers.CharField(max_length=255)
+    gender=serializers.CharField(max_length=255)
+    date_of_birth=serializers.CharField(max_length=255)
+    mobile_no=serializers.CharField(max_length=255)
+    is_verified=serializers.BooleanField()
+    is_above18=serializers.BooleanField()
+    refer_code=serializers.CharField(max_length=255)
+    refer_by=serializers.CharField(max_length=255)
+    my_code=serializers.CharField(max_length=255)
+    played=serializers.IntegerField()
+    created=serializers.IntegerField()
+
+class LiveSerializer(serializers.Serializer):
+    game_id=serializers.IntegerField()
+    game_name=serializers.CharField(max_length=100)
+    message_for_player=serializers.CharField(max_length=255)
+    lobby=serializers.CharField(max_length=25)
+    ticket_cost=serializers.CharField(max_length=25)
+    start_at=serializers.DateTimeField()
+    ticket_request_till=serializers.DateTimeField()
+    number_of_ticket=serializers.IntegerField()
+    timer=serializers.CharField(max_length=255)
+    private_code=serializers.CharField(max_length=255)
+    # game_counter=serializers.CharField(max_length=255)
+    is_completed=serializers.BooleanField()
+    # created_at=serializers.BooleanField()
+    user_id= serializers.IntegerField()
+    first_name= serializers.CharField(max_length=255)
+    username= serializers.CharField(max_length=255)
+    profile_picture=serializers.CharField(max_length=255)
+    city=serializers.CharField(max_length=255)
+    gender=serializers.CharField(max_length=255)
+    date_of_birth=serializers.CharField(max_length=255)
+    mobile_no=serializers.CharField(max_length=255)
+    is_verified=serializers.BooleanField()
+    is_above18=serializers.BooleanField()
+    refer_code=serializers.CharField(max_length=255)
+    refer_by=serializers.CharField(max_length=255)
+    my_code=serializers.CharField(max_length=255)
+    played=serializers.IntegerField()
+    created=serializers.IntegerField()
+
+class PlayedSerializer(serializers.Serializer):
+    game_id=serializers.IntegerField()
+    game_name=serializers.CharField(max_length=100)
+    message_for_player=serializers.CharField(max_length=255)
+    lobby=serializers.CharField(max_length=25)
+    ticket_cost=serializers.CharField(max_length=25)
+    start_at=serializers.DateTimeField()
+    ticket_request_till=serializers.DateTimeField()
+    number_of_ticket=serializers.IntegerField()
+    timer=serializers.CharField(max_length=255)
+    private_code=serializers.CharField(max_length=255)
+    # game_counter=serializers.CharField(max_length=255)
+    is_completed=serializers.BooleanField()
+    # created_at=serializers.BooleanField()
+    user_id= serializers.IntegerField()
+    first_name= serializers.CharField(max_length=255)
+    username= serializers.CharField(max_length=255)
+    profile_picture=serializers.CharField(max_length=255)
+    city=serializers.CharField(max_length=255)
+    gender=serializers.CharField(max_length=255)
+    date_of_birth=serializers.CharField(max_length=255)
+    mobile_no=serializers.CharField(max_length=255)
+    is_verified=serializers.BooleanField()
+    is_above18=serializers.BooleanField()
+    refer_code=serializers.CharField(max_length=255)
+    refer_by=serializers.CharField(max_length=255)
+    my_code=serializers.CharField(max_length=255)
+    played=serializers.IntegerField()
+    created=serializers.IntegerField()
+
+class CreatedSerializer(serializers.Serializer):
+    game_id=serializers.IntegerField()
+    game_name=serializers.CharField(max_length=100)
+    message_for_player=serializers.CharField(max_length=255)
+    lobby=serializers.CharField(max_length=25)
+    ticket_cost=serializers.CharField(max_length=25)
+    start_at=serializers.DateTimeField()
+    ticket_request_till=serializers.DateTimeField()
+    number_of_ticket=serializers.IntegerField()
+    timer=serializers.CharField(max_length=255)
+    private_code=serializers.CharField(max_length=255)
+    # game_counter=serializers.CharField(max_length=255)
+    is_completed=serializers.BooleanField()
+    # created_at=serializers.BooleanField()
+    user_id= serializers.IntegerField()
+    first_name= serializers.CharField(max_length=255)
+    username= serializers.CharField(max_length=255)
+    profile_picture=serializers.CharField(max_length=255)
+    city=serializers.CharField(max_length=255)
+    gender=serializers.CharField(max_length=255)
+    date_of_birth=serializers.CharField(max_length=255)
+    mobile_no=serializers.CharField(max_length=255)
+    is_verified=serializers.BooleanField()
+    is_above18=serializers.BooleanField()
+    refer_code=serializers.CharField(max_length=255)
+    refer_by=serializers.CharField(max_length=255)
+    my_code=serializers.CharField(max_length=255)
+    played=serializers.IntegerField()
+    created=serializers.IntegerField()

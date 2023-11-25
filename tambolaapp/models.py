@@ -12,6 +12,9 @@ var =str(user_code)
 game_code = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
 game_code_var =str(game_code)
 
+counter=list(range(1,91))
+random.shuffle(counter)
+
 # Create your models here.
 class City(models.Model):
     city_name=models.CharField(max_length=100)
@@ -62,6 +65,7 @@ class NewGame(models.Model):
     number_of_tickets=models.CharField(max_length=50,null=True)
     timer=models.CharField(max_length=50)
     private_code=models.CharField(max_length=100,default=game_code_var)
+    game_counter=models.JSONField(default=counter)
     is_completed=models.BooleanField(default=False)
     created_at=models.DateTimeField(auto_now=True)
 
@@ -124,4 +128,17 @@ class WalletAmt(models.Model):
 
 class PayByWalletAmount(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    walletid = models.CharField(max_length=100)
+    walletid = models.ForeignKey(WalletAmt,on_delete=models.CASCADE)
+
+class Ticket(models.Model):
+    assign_to=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    game=models.ForeignKey(NewGame,on_delete=models.CASCADE)
+    value=models.JSONField(default=[])
+    is_winner=models.BooleanField(default=False)
+    is_paid=models.BooleanField(default=False)
+
+class Compliment(models.Model):
+    compliment_to=models.ForeignKey(User,on_delete=models.CASCADE,related_name='compliment_to')
+    compliment_by=models.ForeignKey(User,on_delete=models.CASCADE,related_name='compliment_by')
+    message=models.TextField()
+    created_at=models.DateTimeField(auto_now=True)

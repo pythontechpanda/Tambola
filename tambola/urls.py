@@ -32,6 +32,8 @@ router.register('AddMoney', views.AddMoneyView, basename='AddMoney'),
 router.register('WalletAdd', views.WalletAddView, basename='WalletAdd'),
 router.register('WalletAmt', views.WalletAmtView, basename='WalletAmt'),
 router.register('PayByWalletAmount', views.PayByWalletAmountView, basename='PayByWalletAmount'),
+router.register('Compliment', views.ComplimentView, basename='Compliment'),
+
 
 
 urlpatterns = [
