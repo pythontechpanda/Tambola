@@ -1,0 +1,78 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+            <div class="row page-titles mx-0">
+                
+            </div>
+            <!-- row -->
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Wallet Add Table</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered zero-configuration">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Wallet Amount</th>
+                                                <th>Wallet Status</th>
+                                                <th>Add Time</th>
+                                                <th>Opration</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for wlt in get_wallet%}
+                                            <tr>
+                                                <td>{{ wlt.user.first_name }}</td>
+                                                <td>{{ wlt.walletamount}}</td>
+                                                <td>
+                                                    {% if wlt.walletstatus == True %}
+                                                    <input type="checkbox" class="css-control-input" id="val-terms" name="actv" value="1" checked>
+                                                    {% elif wlt.walletstatus == False %}
+                                                    <input type="checkbox" class="css-control-input" id="val-terms" name="actv">
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ wlt.wallettime }}</td>
+                                                <td>
+                                                    <span>
+                                                        <a href="{% url 'wallet_edit' id=wlt.id %}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i> </a> | 
+                                                        <a href="{% url 'wallet_del' id=wlt.id %}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o color-danger"></i></a></span>
+                                                </td>
+                                            </tr>      
+                                            {% endfor %}                                      
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Wallet Amount</th>
+                                                <th>Wallet Status</th>
+                                                <th>Add Time</th>
+                                                <th>Opration</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #/ container -->
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        
+        
+
+        
+        {% endblock content %}

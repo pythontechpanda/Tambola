@@ -20,6 +20,10 @@
     <!-- Custom Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
+
+
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
 </head>
 
 <body>
@@ -49,7 +53,7 @@
         ***********************************-->
         <div class="nav-header">
             <div class="brand-logo">
-                <a href="/admin-panel/">
+                <a href="/admin-panel/index/">
                     <b class="logo-abbr"><img src="{% static 'images/logo.png' %}" alt=""> </b>
                     <span class="logo-compact"><img src="{% static 'images/logo-compact.png' %}" alt=""></span>
                     <span class="brand-title">
@@ -150,7 +154,7 @@
                                 <i class="mdi mdi-bell-outline"></i>
                                 <span class="badge badge-pill gradient-2">{{ pending }}</span>
                             </a>
-                            <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
+                            {% comment %} <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
                                 <div class="dropdown-content-heading d-flex justify-content-between">
                                     <span class="">{{ pending }} New Notifications</span>  
                                     <a href="javascript:void()" class="d-inline-block">
@@ -197,44 +201,33 @@
                                         </li>
                                     </ul>
                                     
-                                </div>
-                            </div>
+                                </div> 
+                            </div>{% endcomment %}
                         </li>
-                        {% comment %} <li class="icons dropdown d-none d-md-flex">
-                            <a href="javascript:void(0)" class="log-user"  data-toggle="dropdown">
-                                <span>English</span>  <i class="fa fa-angle-down f-s-14" aria-hidden="true"></i>
-                            </a>
-                            <div class="drop-down dropdown-language animated fadeIn  dropdown-menu">
-                                <div class="dropdown-content-body">
-                                    <ul>
-                                        <li><a href="javascript:void()">English</a></li>
-                                        <li><a href="javascript:void()">Dutch</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li> {% endcomment %}
+                        
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
                                 <span class="activity active"></span>
-                                <img src="images/user/1.png" height="40" width="40" alt="">
+                                
+                                <img src="{% static 'images/admin.png' %}" height="40" width="40" alt="">
                             </div>
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <ul>
-                                        <li>
-                                            <a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>
-                                        </li>
-                                        <li>
+                                        {% comment %} <li>
+                                            <a href="{% url 'admin_profile' id=request.user.id %}"><i class="icon-user"></i> <span>Profile</span></a>
+                                        </li> {% endcomment %}
+                                        {% comment %} <li>
                                             <a href="javascript:void()">
                                                 <i class="icon-envelope-open"></i> <span>Inbox</span> <div class="badge gradient-3 badge-pill gradient-1">3</div>
                                             </a>
-                                        </li>
+                                        </li> {% endcomment %}
                                         
                                         <hr class="my-2">
                                         <li>
-                                            <a href="page-lock.html"><i class="icon-lock"></i> <span>Lock Screen</span></a>
+                                            <a href="/admin-panel/changepassword/{{request.user.id}}/"><i class="icon-lock"></i> <span>Change Password</span></a>
                                         </li>
-                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Logout</span></a></li>
+                                        <li><a href="/admin-panel/logout/"><i class="icon-key"></i> <span>Logout</span></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -259,8 +252,7 @@
                             <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="index.html">Home 1</a></li>
-                            <!-- <li><a href="index-2.html">Home 2</a></li> -->
+                            <li><a href="/admin-panel/index/">Home 1</a></li>
                         </ul>
                     </li>
                     <li class="mega-menu mega-menu-sm">
@@ -270,23 +262,12 @@
                         <ul aria-expanded="false">
                             <li><a href="/admin-panel/new-user/">New User</a></li>
                             <li><a href="/admin-panel/users-table/">Show Users</a></li>
-                            <!--
-                            <li><a href="layout-two-column.html">Two column</a></li>
-                            <li><a href="layout-compact-nav.html">Compact Nav</a></li>
-                            <li><a href="layout-vertical.html">Vertical</a></li>
-                            <li><a href="layout-horizontal.html">Horizontal</a></li>
-                            <li><a href="layout-boxed.html">Boxed</a></li>
-                            <li><a href="layout-wide.html">Wide</a></li>
                             
-                            
-                            <li><a href="layout-fixed-header.html">Fixed Header</a></li>
-                            <li><a href="layout-fixed-sidebar.html">Fixed Sidebar</a></li>-->
                         </ul>
                     </li>
-                    {% comment %} <li class="nav-label">Apps</li> {% endcomment %}
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-envelope menu-icon"></i> <span class="nav-text">City</span>
+                            <i class="icon-location-pin menu-icon"></i> <span class="nav-text">City</span>
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="/admin-panel/new-city/">New City</a></li>
@@ -295,90 +276,67 @@
                     </li>
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-screen-tablet menu-icon"></i><span class="nav-text">Apps</span>
+                            <i class="icon-graph menu-icon"></i><span class="nav-text">About Game</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="app-profile.html">Profile</a></li>
-                            <li><a href="app-calender.html">Calender</a></li>
+                            <li><a href="/admin-panel/new-game-rule/">Game Rule</a></li>
+                            <li><a href="/admin-panel/game-rule-table/">Show Game Rule</a></li>
+
+                            <li><a href="/admin-panel/rule-in-game/">Rule In Game</a></li>
+                            <li><a href="/admin-panel/rule-in-game-table/">Show Rule In Game</a></li>
                         </ul>
                     </li>
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-graph menu-icon"></i> <span class="nav-text">Charts</span>
+                            <i class="icon-control-start menu-icon"></i> <span class="nav-text">Game</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="chart-flot.html">Flot</a></li>
-                            <li><a href="chart-morris.html">Morris</a></li>
-                            <li><a href="chart-chartjs.html">Chartjs</a></li>
-                            <li><a href="chart-chartist.html">Chartist</a></li>
-                            <li><a href="chart-sparkline.html">Sparkline</a></li>
-                            <li><a href="chart-peity.html">Peity</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-label">UI Components</li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-grid menu-icon"></i><span class="nav-text">UI Components</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="ui-accordion.html">Accordion</a></li>
-                            <li><a href="ui-alert.html">Alert</a></li>
-                            <li><a href="ui-badge.html">Badge</a></li>
-                            <li><a href="ui-button.html">Button</a></li>
-                            <li><a href="ui-button-group.html">Button Group</a></li>
-                            <li><a href="ui-cards.html">Cards</a></li>
-                            <li><a href="ui-carousel.html">Carousel</a></li>
-                            <li><a href="ui-dropdown.html">Dropdown</a></li>
-                            <li><a href="ui-list-group.html">List Group</a></li>
-                            <li><a href="ui-media-object.html">Media Object</a></li>
-                            <li><a href="ui-modal.html">Modal</a></li>
-                            <li><a href="ui-pagination.html">Pagination</a></li>
-                            <li><a href="ui-popover.html">Popover</a></li>
-                            <li><a href="ui-progressbar.html">Progressbar</a></li>
-                            <li><a href="ui-tab.html">Tab</a></li>
-                            <li><a href="ui-typography.html">Typography</a></li>
-                        <!-- </ul>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-layers menu-icon"></i><span class="nav-text">Components</span>
-                        </a>
-                        <ul aria-expanded="false"> -->
-                            <li><a href="uc-nestedable.html">Nestedable</a></li>
-                            <li><a href="uc-noui-slider.html">Noui Slider</a></li>
-                            <li><a href="uc-sweetalert.html">Sweet Alert</a></li>
-                            <li><a href="uc-toastr.html">Toastr</a></li>
+                            <li><a href="/admin-panel/new-game/">New Game</a></li>
+                            <li><a href="/admin-panel/new-game-table/">Show Game</a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="widgets.html" aria-expanded="false">
-                            <i class="icon-badge menu-icon"></i><span class="nav-text">Widget</span>
-                        </a>
-                    </li>
-                    <li class="nav-label">Forms</li>
-                    <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-note menu-icon"></i><span class="nav-text">Forms</span>
+                            <i class="icon-grid menu-icon"></i><span class="nav-text">Help and Support</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="form-basic.html">Basic Form</a></li>
-                            <li><a href="form-validation.html">Form Validation</a></li>
-                            <li><a href="form-step.html">Step Form</a></li>
-                            <li><a href="form-editor.html">Editor</a></li>
-                            <li><a href="form-picker.html">Picker</a></li>
+                            <li><a href="/admin-panel/help-support-rule/">New Help</a></li>
+                            <li><a href="/admin-panel/help-support-table/">Show Help</a></li>
+                            
+                            <li><a href="/admin-panel/page-create/">New Page</a></li>
+                            <li><a href="/admin-panel/page-table/">Show Page</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Table</li>
+                    
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-menu menu-icon"></i><span class="nav-text">Table</span>
+                            <i class="icon-paypal menu-icon"></i><span class="nav-text">Payment Section</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="table-basic.html" aria-expanded="false">Basic Table</a></li>
-                            <li><a href="table-datatable.html" aria-expanded="false">Data Table</a></li>
+                            <li><a href="/admin-panel/add-money-create/">Add Money</a></li>
+                            <li><a href="/admin-panel/add-money-table/">Show Add Money</a></li>
+                            <li><a href="/admin-panel/wallet-add-create/">Wallet Add</a></li>
+                            <li><a href="/admin-panel/wallet-add-table/">Show Wallet Add</a></li>
+                            <li><a href="/admin-panel/wallet-amount-create/">Wallet Amount Add</a></li>
+                            <li><a href="/admin-panel/wallet-amount-table/">Show Wallet Amount</a></li>
+                            <li><a href="/admin-panel/pay-by-wallet-create/">Wallet Amount Add</a></li>
+                            <li><a href="/admin-panel/pay-by-wallet-table/">Show Wallet Amount</a></li>
                         </ul>
                     </li>
-                    <li class="nav-label">Pages</li>
+                   
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-menu menu-icon"></i><span class="nav-text">Ticket</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="/admin-panel/ticket-create/" aria-expanded="false">Add Ticket</a></li>
+                            <li><a href="/admin-panel/ticket-table/" aria-expanded="false">Show Ticket</a></li>
+
+                            <li><a href="/admin-panel/buy-ticket-create/" aria-expanded="false">Buy Ticket</a></li>
+                            <li><a href="/admin-panel/buy-ticket-table/" aria-expanded="false">Show Buy Ticket</a></li>
+                        </ul>
+                    </li>
+                    {% comment %} <li class="nav-label">Pages</li>
                     <li>
                         <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon-notebook menu-icon"></i><span class="nav-text">Pages</span>
@@ -395,7 +353,7 @@
                                     <li><a href="page-error-500.html">Error 500</a></li>
                                     <li><a href="page-error-503.html">Error 503</a></li>
                                 </ul>
-                            </li>
+                            </li> {% endcomment %}
                         </ul>
                     </li>
                 </ul>
@@ -424,7 +382,7 @@
                                 <h3 class="card-title text-white">Products Sold</h3>
                                 <div class="d-inline-block">
                                     <h2 class="text-white">4565</h2>
-                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                    <p class="text-white mb-0">{{ request.user.last_login.date }}</p>
                                 </div>
                                 <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
                             </div>
@@ -436,7 +394,7 @@
                                 <h3 class="card-title text-white">Net Profit</h3>
                                 <div class="d-inline-block">
                                     <h2 class="text-white">$ 8541</h2>
-                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                    <p class="text-white mb-0">{{ request.user.last_login.date }}</p>
                                 </div>
                                 <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
                             </div>
@@ -447,8 +405,8 @@
                             <div class="card-body">
                                 <h3 class="card-title text-white">New Customers</h3>
                                 <div class="d-inline-block">
-                                    <h2 class="text-white">4565</h2>
-                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                    <h2 class="text-white">{{ notify }}</h2>
+                                    <p class="text-white mb-0">{{ request.user.last_login.date }}</p>
                                 </div>
                                 <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
                             </div>
@@ -460,7 +418,7 @@
                                 <h3 class="card-title text-white">Customer Satisfaction</h3>
                                 <div class="d-inline-block">
                                     <h2 class="text-white">99%</h2>
-                                    <p class="text-white mb-0">Jan - March 2019</p>
+                                    <p class="text-white mb-0">{{ request.user.last_login.date }}</p>
                                 </div>
                                 <span class="float-right display-5 opacity-5"><i class="fa fa-heart"></i></span>
                             </div>

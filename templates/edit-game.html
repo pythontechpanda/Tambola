@@ -1,0 +1,163 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+            <div class="row page-titles mx-0">
+                
+            </div>
+            <!-- row -->
+
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-validation">
+                                    {% for message in messages  %}            
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="color:#ffffff;">
+                                            <strong style="color:#ffffff;">Message : </strong> {{ message }}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    {% endfor %} 
+                                    <form class="form-valide" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val">Game name <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="val" name="gname" value="{{ game.game_name }}" placeholder="Enter a game name.." required>
+                                            </div>
+                                        </div>
+
+                                        
+
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val">Message For Player <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <textarea type="text" class="form-control" id="val" name="message" placeholder="Enter lobby.." >{{ game.message_for_player }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val">Lobby <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="val" name="lobby" value="{{ game.lobby }}" placeholder="Enter message for player" required>
+                                                <p class="error-message" id="contact-error"></p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-website">Select City <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <select class="form-control" name="user">
+                                                    <option value="{{ game.user.id }}">{{ game.user.first_name }}</option>
+                                                    {% for usr in getUser %}
+                                                    <option value="{{ usr.id }}">{{ usr.first_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val">Ticket Cost <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="val" name="tkcost" value="{{ game.ticket_cost }}" placeholder="Ticket cost.." required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-suggestions">Start At <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="val" name="start" value="{{ game.start_at|date:'Y-m-d g:i A' }}" placeholder="Start At.." required>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-">Ticket Request Till<span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="" name="tkrequest" value="{{ game.ticket_request_till|date:'Y-m-d g:i A' }}" placeholder="Ticket request till.." required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-">Number Of Tickets<span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="" name="noftk" value="{{ game.number_of_tickets }}" placeholder="Number of tickets.." required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-">Timer<span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="" name="tim" value="{{ game.timer }}" placeholder="Timer.." required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-">Private Code<span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="" name="pcode" value="{{ game.private_code }}" placeholder="Private code.." required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label"><a href="#">Is Completed</a>  <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-8">
+                                                <label class="css-control css-control-primary css-checkbox" for="val-terms">
+                                                {% if game.is_completed == True %}
+                                                <input type="checkbox" class="css-control-input" id="val-terms" name="actv" value="1" checked>
+                                                <input type="text" style="display: none;" id="act-result"  name="actv" value="1">
+                                                {% elif game.is_completed == False %}
+                                                <input type="checkbox" class="css-control-input" id="val-terms" name="actv" value="1"></label>
+                                                <input type="text" style="display: none;" id="act-result"  name="actv" value="0">
+                                                 {% endif %}
+                                                </div>
+                                        </div>
+                                       
+
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-">Private Code<span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="" name="create" value="{{ game.created_at|date:'Y-m-d g:i A'  }}" placeholder="Private code.." required>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-8 ml-auto">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #/ container -->
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        
+        
+        {% endblock content %}

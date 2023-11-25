@@ -29,8 +29,19 @@ from rest_framework.routers import DefaultRouter
 from tambolaapp import views
 
 router = DefaultRouter()
-router.register('user', views.UserView, basename='user'),
-router.register('city', views.CityView, basename='city'),
+router.register('User', views.UserView, basename='User'),
+router.register('City', views.CityView, basename='City'),
+router.register('Game_Rule', views.Game_RuleView, basename='Game_Rule'),
+router.register('NewGame', views.NewGameView, basename='NewGame'),
+router.register('RuleInGame', views.RuleInGameView, basename='RuleInGame'),
+router.register('HelpAndSupport', views.HelpAndSupportView, basename='HelpAndSupport'),
+router.register('AddMoney', views.AddMoneyView, basename='AddMoney'),
+router.register('WalletAdd', views.WalletAddView, basename='WalletAdd'),
+router.register('WalletAmt', views.WalletAmtView, basename='WalletAmt'),
+router.register('PayByWalletAmount', views.PayByWalletAmountView, basename='PayByWalletAmount'),
+router.register('buy-ticket', views.BuyTicketView, basename='buy-ticket'),
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

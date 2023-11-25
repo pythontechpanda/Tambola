@@ -1,0 +1,128 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+     <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+            <div class="row page-titles mx-0">
+                
+            </div>
+            <!-- row -->
+
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-validation">
+                                    <form class="form-valide" action="#" method="post">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-username">Game Name 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.game_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-email">Message For Player 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.message_for_player }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-password">Lobby 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.lobby }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-confirm-password">User Name
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.user.first_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-suggestions">Ticket Cost 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.ticket_cost }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-skill">Start At 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.start_at }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-currency">Ticket Request Till 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.ticket_request_till }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-website">Number Of Ticket 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.number_of_tickets }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-phoneus">Timer 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.timer }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-digits">Private Code 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.private_code }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label"><a href="#">Is Completed</a>  
+                                        </label>
+                                        <div class="col-lg-8">
+                                            <label class="css-control css-control-primary css-checkbox" for="val-terms">
+                                            {% if get_game.is_completed == True %}
+                                            <input type="checkbox" class="css-control-input" id="val-terms" name="actv" value="1" checked>
+                                            <input type="text" style="display: none;" id="act-result"  name="actv" value="1">
+                                            {% elif get_game.is_completed == False %}
+                                            <input type="checkbox" class="css-control-input" id="val-terms" name="actv" value="1"></label>
+                                            <input type="text" style="display: none;" id="act-result"  name="actv" value="0">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val-range">Create At 
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <p>{{ get_game.created_at }}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #/ container -->
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        
+        {% endblock content %}

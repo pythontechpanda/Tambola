@@ -154,6 +154,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 
+razor_pay_key_id= 'rzp_test_yXpKwsLWjkzvBJ'
+key_secret= 'FSYfNos1dKgera8sbDFHkoTd'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

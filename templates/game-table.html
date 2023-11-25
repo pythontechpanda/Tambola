@@ -1,0 +1,75 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+            <div class="row page-titles mx-0">
+                
+            </div>
+            <!-- row -->
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Game Table</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered zero-configuration">
+                                        <thead>
+                                            <tr>
+                                                <th>Game name</th>
+                                                <th>Message for player</th>
+                                                <th>Lobby</th>
+                                                <th>Ticket Cost</th>
+                                                <th>Start At</th>
+                                                <th>Opration</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for ggm in get_game%}
+                                            <tr>
+                                                <td>{{ ggm.game_name }}</td>
+                                                <td>{{ ggm.message_for_player}}</td>
+                                                <td>{{ ggm.lobby}}</td>
+                                                <td>{{ ggm.ticket_cost }}</td>
+                                                <td>{{ ggm.start_at }}</td>
+                                                <td>
+                                                    <span><a href="{% url 'view_detail' id=ggm.id %}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-eye color-muted m-r-5"></i> </a> |
+                                                        <a href="{% url 'game_edit' id=ggm.id %}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i> </a> | 
+                                                        <a href="{% url 'game_del' id=ggm.id %}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash-o color-danger"></i></a></span>
+                                                </td>
+                                            </tr>      
+                                            {% endfor %}                                      
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Game name</th>
+                                                <th>Message for player</th>
+                                                <th>Lobby</th>
+                                                <th>Ticket Cost</th>
+                                                <th>Start At</th>
+                                                <th>Opration</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #/ container -->
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        
+        
+
+        
+        {% endblock content %}
