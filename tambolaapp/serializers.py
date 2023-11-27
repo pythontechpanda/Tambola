@@ -275,3 +275,36 @@ class CreatedSerializer(serializers.Serializer):
     my_code=serializers.CharField(max_length=255)
     played=serializers.IntegerField()
     created=serializers.IntegerField()
+
+class ClaimRuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClaimRule
+        fields = '__all__'
+        depth =2
+
+class ClaimRulePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClaimRule
+        fields = '__all__'
+
+class WithdrawRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WithdrawRequest
+        fields = '__all__'
+        depth =2
+
+class WithdrawRequestPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WithdrawRequest
+        fields = '__all__'
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'
+        depth =2
+
+class NotificationPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'

@@ -31,6 +31,7 @@ class User(AbstractUser):
     my_code=models.CharField(max_length=100,default=var)
     refer_by=models.CharField(max_length=100,default='admin')
     refer_code=models.CharField(max_length=50,default=0)
+    device_registration_id=models.CharField(max_length=200,null=True)
     is_verified=models.BooleanField(default=False)
     is_above18=models.BooleanField(default=False)
 
@@ -128,7 +129,7 @@ class WalletAmt(models.Model):
 
 class PayByWalletAmount(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    walletid = models.ForeignKey(WalletAmt,on_delete=models.CASCADE)
+    amount = models.CharField(max_length=100)
 
 class Ticket(models.Model):
     assign_to=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
@@ -141,4 +142,24 @@ class Compliment(models.Model):
     compliment_to=models.ForeignKey(User,on_delete=models.CASCADE,related_name='compliment_to')
     compliment_by=models.ForeignKey(User,on_delete=models.CASCADE,related_name='compliment_by')
     message=models.TextField()
+    created_at=models.DateTimeField(auto_now=True)
+
+class ClaimRule(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    rule=models.ForeignKey(Game_Rule,on_delete=models.CASCADE)
+    game=models.ForeignKey(NewGame,on_delete=models.CASCADE)
+    counter_array=models.JSONField(default=[])
+    check_claim=models.BooleanField(default=False)
+    claim_at=models.DateTimeField(auto_now=True)
+
+class Notification(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    title=models.CharField(max_length=100)
+    body=models.TextField()
+    image=models.FileField(upload_to ='notification', default='notification/notification.png')
+    created_at=models.DateTimeField(auto_now=True)
+
+class WithdrawRequest(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    amount=models.CharField(max_length=100)
     created_at=models.DateTimeField(auto_now=True)

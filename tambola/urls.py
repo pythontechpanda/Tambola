@@ -33,6 +33,9 @@ router.register('WalletAdd', views.WalletAddView, basename='WalletAdd'),
 router.register('WalletAmt', views.WalletAmtView, basename='WalletAmt'),
 router.register('PayByWalletAmount', views.PayByWalletAmountView, basename='PayByWalletAmount'),
 router.register('Compliment', views.ComplimentView, basename='Compliment'),
+router.register('ClaimRule', views.ClaimRuleView, basename='ClaimRule'),
+router.register('Notification', views.NotificationView, basename='Notification'),
+router.register('WithdrawRequest', views.WithdrawRequestView, basename='WithdrawRequest'),
 
 
 

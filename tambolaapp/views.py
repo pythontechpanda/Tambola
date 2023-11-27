@@ -885,3 +885,141 @@ class ComplimentFilterView(APIView):
         else:
             raise AuthenticationFailed('Invalid ID, try again')
         
+   
+class ClaimRuleView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = ClaimRule.objects.all()
+        serializer = ClaimRuleSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = ClaimRule.objects.get(id=id)
+            serializer = ClaimRuleSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = ClaimRulePostSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created','id':serializer.data['id']}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = ClaimRule.objects.get(pk=id)
+        serializer = ClaimRuleSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = ClaimRule.objects.get(pk=id)
+        serializer = ClaimRuleSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = ClaimRule.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+
+class NotificationView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = Notification.objects.all()
+        serializer = NotificationSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = Notification.objects.get(id=id)
+            serializer = NotificationSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = NotificationPostSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created','id':serializer.data['id']}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = Notification.objects.get(pk=id)
+        serializer = NotificationSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = Notification.objects.get(pk=id)
+        serializer = NotificationSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = Notification.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+    
+class WithdrawRequestView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = WithdrawRequest.objects.all()
+        serializer = WithdrawRequestSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = WithdrawRequest.objects.get(id=id)
+            serializer = WithdrawRequestSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = WithdrawRequestPostSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created','id':serializer.data['id']}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = WithdrawRequest.objects.get(pk=id)
+        serializer = WithdrawRequestSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = WithdrawRequest.objects.get(pk=id)
+        serializer = WithdrawRequestSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = WithdrawRequest.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
