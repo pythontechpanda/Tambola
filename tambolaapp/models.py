@@ -124,14 +124,7 @@ class Page(models.Model):
 
 
 
-class AddMoney(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    add_date = models.DateTimeField(auto_now=True)
-    add_status = models.BooleanField(default=False)
-    add_price = models.CharField(max_length=200, null=True)
-    razor_pay_order_id = models.CharField(max_length=100, null=True, blank=True)
-    razor_pay_payment_id = models.CharField(max_length=100, null=True, blank=True)
-    razor_pay_payment_signature = models.CharField(max_length=100, null=True, blank=True)
+
 
 class WalletAdd(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -151,7 +144,7 @@ class WalletAmt(models.Model):
 
 class PayByWalletAmount(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    walletid = models.CharField(max_length=100)
+    amount = models.CharField(max_length=100)
     
     
     
@@ -171,4 +164,7 @@ class BuyTicket(models.Model):
     razor_pay_order_id = models.CharField(max_length=100, null=True, blank=True)
     razor_pay_payment_id = models.CharField(max_length=100, null=True, blank=True)
     razor_pay_payment_signature = models.CharField(max_length=100, null=True, blank=True)
+    
+    
+
     

@@ -14,12 +14,24 @@ from pathlib import Path
 import os
 import datetime
 from django.contrib.messages import constants as messages
+import firebase_admin
+from firebase_admin import credentials
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 STATIC_DIR = os.path.join(BASE_DIR,'static')
 MEDIA_ROOT = os.path.join(BASE_DIR,'media/') 
+
+
+
+KEY_DIR = os.path.join(BASE_DIR, 'keys')
+KEY_FILE = os.path.join(KEY_DIR, 'tambola-notification-firebase-adminsdk-g1osc-bd5947821d.json')
+# Initialize the Firebase Admin SDK with the service account credentials
+cred = credentials.Certificate(KEY_FILE)
+firebase_admin.initialize_app(cred)
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/

@@ -385,51 +385,7 @@ class PageView(APIView):
             raise AuthenticationFailed('Invalid credentials, try again')
 
     
-class AddMoneyView(viewsets.ViewSet):
-    permission_classes = (permissions.IsAuthenticated,)
-    def list(self, request):      # list - get all record
-        stu = AddMoney.objects.all()
-        serializer = AddMoneySerializer(stu, many=True)    # many use for bulk data come 
-        return Response(serializer.data)
 
-
-    def retrieve(self, request, pk=None):
-        id = pk
-        if id is not None:
-            stu = AddMoney.objects.get(id=id)
-            serializer = AddMoneySerializer(stu)
-            return Response(serializer.data)
-
-    def create(self, request):
-        serializer = AddMoneySerializer(data = request.data)  # form data conviert in json data
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self, request, pk):
-        id = pk
-        stu = AddMoney.objects.get(pk=id)
-        serializer = AddMoneySerializer(stu, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'Complete Data Update'})
-        return Response(serializer.errors)
-
-    def partial_update(self, request, pk):
-        id = pk
-        stu = AddMoney.objects.get(pk=id)
-        serializer = AddMoneySerializer(stu, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'Partial Data Update'})
-        return Response(serializer.errors)
-
-    def destroy(self, request, pk):
-        id = pk
-        stu = AddMoney.objects.get(pk=id)
-        stu.delete()
-        return Response({'msg': 'Data deleted'})
 
 
     
@@ -452,7 +408,13 @@ class WalletAddView(viewsets.ViewSet):
         serializer = WalletAddSerializer(data = request.data)  # form data conviert in json data
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+            client = razorpay.Client(auth = (settings.razor_pay_key_id, settings.key_secret) )
+            print(">>>>>>", client)
+            payment = client.order.create({ 'amount': 100, 'currency': 'INR', 'payment_capture': 1})
+            print("******************************")
+            print(payment)
+            print("******************************")
+            return Response({'msg': 'Data Created','order_id':payment['id'],'user_id':serializer.data['user'],'status':serializer.data['walletstatus']}, status= status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk):
@@ -497,8 +459,36 @@ class WalletAmtView(viewsets.ViewSet):
 
     def create(self, request):
         serializer = WalletAmtSerializer(data = request.data)  # form data conviert in json data
+        print("request.data",request.data['amount'])
+        prod = WalletAmt.objects.filter(user=request.data['user'])
+        tik = BuyTicket.objects.filter(userid=request.data['user'])
+        his = 0
+        for j in tik:
+            print("ticket", j)
+            his += float(j.order_price)
+        print("history", his)
+        
+        c = 0
+        for i in prod:
+            c = c + float(i.amount)
+            print(i.amount)
+        print("amount",c, request.data['amount'])
+    
+        uss=PayByWalletAmount.objects.filter(user=request.data['user']).exists()
+        print('hcawdskj',uss)
+        am = float(c)+float(request.data['amount'])-float(his)
+        if uss:
+            var2=PayByWalletAmount.objects.filter(user=request.data['user'])
+            var2.update(amount=am)
+        else:
+            print(am)
+            var1 = PayByWalletAmount(user_id=request.data['user'], amount=am)
+            var1.save()
         if serializer.is_valid():
             serializer.save()
+            print("====================",serializer.data['user'])
+            
+            
             return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -547,6 +537,7 @@ class PayByWalletAmountView(viewsets.ViewSet):
         serializer = PayByWalletAmountSerializer(data = request.data)  # form data conviert in json data
         if serializer.is_valid():
             serializer.save()
+            
             return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -596,16 +587,28 @@ class BuyTicketView(viewsets.ViewSet):
         serializer = BuyTicketSerializer(data = request.data)  # form data conviert in json data
         if serializer.is_valid():
             serializer.save()
-            print(serializer.data['ticketid'])
-            # cc = serializer.data['pooja']['price']
-            client = razorpay.Client(auth = (settings.razor_pay_key_id, settings.key_secret) )
-            print(">>>>>>", client)
-            payment = client.order.create({ 'amount': 100, 'currency': 'INR', 'payment_capture': 1})
-            print("******************************")
-            print(payment)
-            print("******************************")
+            print(serializer.data['userid'],"====")
             
-            return Response({'msg': 'Data Created','order_id':payment['id'],'ticket_id':serializer.data['ticketid'],'user_id':serializer.data['userid']}, status= status.HTTP_201_CREATED)
+            obj=WalletAmt.objects.filter(user=serializer.data['userid'])
+            print("=========>>>>",obj)
+            c = 0
+            for i in obj:
+                print(i)
+                c = c + float(i.amount)
+            print("c", c)    
+                
+            upl = PayByWalletAmount.objects.get(user=serializer.data['userid'])
+            print("upl", upl)
+            ll=upl.amount
+            print('balance',ll)
+            amtminus=c-float(serializer.data['order_price'])
+            print("><><><><><>><>",amtminus,ll)
+            uplead = PayByWalletAmount.objects.filter(user_id=serializer.data['userid'])
+        
+            uplead.update(amount=amtminus)
+            
+            print("===========Updated================")
+            return Response({'msg': 'Data Created','ticket_id':serializer.data['ticketid'],'user_id':serializer.data['userid']}, status= status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -662,10 +665,10 @@ class GetWalletAmountView(APIView):
                 print(i)
                 c = c + float(i.amount)
                 
-            uss=PayByWalletAmount.objects.filter(user_id=request.user.id).exists()
+            uss=PayByWalletAmount.objects.filter(user=id).exists()
             if uss:
-                var2=PayByWalletAmount.objects.get(user_id=user)
-                chg=var2.walletid
+                var2=PayByWalletAmount.objects.get(user=id)
+                chg=var2.amount
             else:
                 chg=0
 
@@ -676,47 +679,3 @@ class GetWalletAmountView(APIView):
 
 
 
-# class PaymentByWalletView(APIView):
-#     permission_classes = (permissions.IsAuthenticated,)
-#     def get(self,request,id):
-#         if User.objects.filter(id=id).exists():
-#             print(user)
-#             prod23 = WalletAmt.objects.filter(user=user)
-#             cb = 0
-#             for i in prod23:
-#                 print('i',i.amount)
-#                 cb = cb + float(i.amount)
-                
-#             print(cb)
-            
-                    
-#             get_obj = BuyTicket.objects.get(userid==id)
-#             print(get_obj,"-----")
-#             # permium = PremiumPhotosPayment.objects.get(userid=user)
-#             prod = PremiumPhotosPayment.objects.get(user=user, premium=get_obj)
-#             print("??????????????????????>>>>", prod)
-
-#             price = float(get_obj.game.ticket_cost)
-#             print("price", price)
-#             user = get_obj.user.id
-#             escort = prod.escortid.id
-#             premium = prod.premium.id
-#             amount = float(prod.premium.amount)
-            
-#             razor_pay_order_id = 'Wallet'
-            
-#             orderobj = BuyTicket(escort_pho_video_id=premium,userid_id=user,escortid_id=escort,amount=amount,razor_pay_order_id=razor_pay_order_id,order_status=False)
-#             orderobj.save()
-#             upl = PayByWalletAmount.objects.get(userid=request.user.id)
-#             ll=upl.walletid
-#             amtminus=float(upl.walletid)-amount
-#             print("><><><><><>><>",amtminus,ll)
-#             uplead = PayByWalletAmount.objects.filter(userid=user)
-                
-#             uplead.update(walletid=amtminus)
-            
-            
-
-#             return Response({'Available Balance': c})
-#         else:
-#             raise AuthenticationFailed('Invalid ID, try again')

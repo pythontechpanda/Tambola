@@ -113,10 +113,7 @@ class PageSerializer(serializers.ModelSerializer):
         model = Page
         fields = '__all__'
 
-class AddMoneySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AddMoney
-        fields = '__all__'
+
 
 class WalletAddSerializer(serializers.ModelSerializer):
     class Meta:
