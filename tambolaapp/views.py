@@ -257,6 +257,36 @@ class NewGameView(viewsets.ViewSet):
 
                 tk=Ticket(game_id=serializer.data['id'],assign_to_id=1,value=rw)
                 tk.save()
+                user_referal=User.objects.get(id=serializer.data['user'])
+                print('>>>>>>>>>',user_referal.refer_code)
+                # if user_data['refer_code'] != 0:
+                #     refer_user=User.objects.get(my_code=user_data['refer_code'])
+                #     user_wallet=WalletAdd(user_id=refer_user.id,walletamount=5,walletstatus=True)
+                #     user_wallet.save()
+                #     user_walletAmt=WalletAmt(walt_id = user_wallet.id,user_id = refer_user.id,payment_status = True,
+                #                             amount = 5,razor_pay_order_id = 'Refer',
+                #                             razor_pay_payment_id = 'Refer',razor_pay_payment_signature = 'Refer')
+                #     user_walletAmt.save()
+                #     prod = WalletAmt.objects.filter(user_id=refer_user.id)
+                #     # tik = BuyTicket.objects.filter(userid=request.data['user'])
+                #     # his = 0
+                #     # for j in tik:
+                #     #     print("ticket", j)
+                #     #     his += float(j.order_price)
+                #     # print("history", his)
+                #     c = 0
+                #     for i in prod:
+                #         c = c + float(i.amount)
+                #     uss=PayByWalletAmount.objects.filter(user_id=refer_user.id).exists()
+                #     # am = float(c)+float(request.data['amount'])-float(his)
+                #     am = float(c)
+
+                #     if uss:
+                #         var2=PayByWalletAmount.objects.filter(user_id=refer_user.id)
+                #         var2.update(amount=am)
+                #     else:
+                #         var1 = PayByWalletAmount(user_id=refer_user.id, amount=am)
+                #         var1.save()
 
             return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
