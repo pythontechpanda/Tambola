@@ -9,7 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     # password = serializers.CharField(max_length=68, min_length=6, write_only=True)
     class Meta:
         model = User
-        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18']
+        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18','device_registration_id','refer_code']
     def validate(self, attrs):
         username = attrs.get('username', '')
         if not username.isalnum():

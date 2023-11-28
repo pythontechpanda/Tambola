@@ -21,6 +21,35 @@ class RegisterView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
+        if user_data['refer_code'] != 0:
+            refer_user=User.objects.get(my_code=user_data['refer_code'])
+            user_wallet=WalletAdd(user_id=refer_user.id,walletamount=5,walletstatus=True)
+            user_wallet.save()
+            user_walletAmt=WalletAmt(walt_id = user_wallet.id,user_id = refer_user.id,payment_status = True,
+                                     amount = 5,razor_pay_order_id = 'Refer',
+                                     razor_pay_payment_id = 'Refer',razor_pay_payment_signature = 'Refer')
+            user_walletAmt.save()
+            prod = WalletAmt.objects.filter(user_id=refer_user.id)
+            # tik = BuyTicket.objects.filter(userid=request.data['user'])
+            # his = 0
+            # for j in tik:
+            #     print("ticket", j)
+            #     his += float(j.order_price)
+            # print("history", his)
+            c = 0
+            for i in prod:
+                c = c + float(i.amount)
+            uss=PayByWalletAmount.objects.filter(user_id=refer_user.id).exists()
+            # am = float(c)+float(request.data['amount'])-float(his)
+            am = float(c)
+
+            if uss:
+                var2=PayByWalletAmount.objects.filter(user_id=refer_user.id)
+                var2.update(amount=am)
+            else:
+                var1 = PayByWalletAmount(user_id=refer_user.id, amount=am)
+                var1.save()
+
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 class LoginAPIView(generics.GenericAPIView):
