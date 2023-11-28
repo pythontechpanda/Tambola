@@ -163,3 +163,10 @@ class WithdrawRequest(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     amount=models.CharField(max_length=100)
     created_at=models.DateTimeField(auto_now=True)
+
+class BankDetail(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    bank_account_number=models.CharField(max_length=200)
+    bank_account_holder_name=models.CharField(max_length=200)
+    ifsc_code=models.CharField(max_length=100)
+    branch_name=models.CharField(max_length=200)

@@ -36,6 +36,7 @@ router.register('Compliment', views.ComplimentView, basename='Compliment'),
 router.register('ClaimRule', views.ClaimRuleView, basename='ClaimRule'),
 router.register('Notification', views.NotificationView, basename='Notification'),
 router.register('WithdrawRequest', views.WithdrawRequestView, basename='WithdrawRequest'),
+router.register('BankDetail', views.BankDetailView, basename='BankDetail'),
 
 
 
