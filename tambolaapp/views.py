@@ -31,24 +31,25 @@ class RegisterView(generics.GenericAPIView):
                                      amount = 5,razor_pay_order_id = 'Refer',
                                      razor_pay_payment_id = 'Refer',razor_pay_payment_signature = 'Refer')
             user_walletAmt.save()
-            prod = WalletAmt.objects.filter(user_id=refer_user.id)
-            # tik = BuyTicket.objects.filter(userid=request.data['user'])
-            # his = 0
-            # for j in tik:
-            #     print("ticket", j)
-            #     his += float(j.order_price)
-            # print("history", his)
+            prod = WalletAmt.objects.filter(user=refer_user.id)
+            tik = BuyTicket.objects.filter(userid=refer_user.id)
+            withdr = WithdrawRequest.objects.Filter(user=refer_user.id,is_completed=True)
+            his = 0
+            for j in tik:
+                his += float(j.order_price)
             c = 0
             for i in prod:
                 c = c + float(i.amount)
-            uss=PayByWalletAmount.objects.filter(user_id=refer_user.id).exists()
-            # am = float(c)+float(request.data['amount'])-float(his)
-            am = float(c)
-
+            w=0
+            for k in withdr:
+                w = w + float(k.amount)
+            uss=PayByWalletAmount.objects.filter(user=refer_user.id).exists()
+            am = float(c)-float(his)-float(w)
             if uss:
-                var2=PayByWalletAmount.objects.filter(user_id=refer_user.id)
+                var2=PayByWalletAmount.objects.filter(user=refer_user.id)
                 var2.update(amount=am)
             else:
+                print(am)
                 var1 = PayByWalletAmount(user_id=refer_user.id, amount=am)
                 var1.save()
         else:
@@ -272,24 +273,25 @@ class NewGameView(viewsets.ViewSet):
                                             amount = 1,razor_pay_order_id = 'Refer',
                                             razor_pay_payment_id = 'Refer',razor_pay_payment_signature = 'Refer')
                     user_walletAmt.save()
-                    prod = WalletAmt.objects.filter(user_id=refer_user.id)
-                    # tik = BuyTicket.objects.filter(userid=request.data['user'])
-                    # his = 0
-                    # for j in tik:
-                    #     print("ticket", j)
-                    #     his += float(j.order_price)
-                    # print("history", his)
+                    prod = WalletAmt.objects.filter(user=refer_user.id)
+                    tik = BuyTicket.objects.filter(userid=refer_user.id)
+                    withdr = WithdrawRequest.objects.Filter(user=refer_user.id,is_completed=True)
+                    his = 0
+                    for j in tik:
+                        his += float(j.order_price)
                     c = 0
                     for i in prod:
                         c = c + float(i.amount)
-                    uss=PayByWalletAmount.objects.filter(user_id=refer_user.id).exists()
-                    # am = float(c)+float(request.data['amount'])-float(his)
-                    am = float(c)
-
+                    w=0
+                    for k in withdr:
+                        w = w + float(k.amount)
+                    uss=PayByWalletAmount.objects.filter(user=refer_user.id).exists()
+                    am = float(c)-float(his)-float(w)
                     if uss:
-                        var2=PayByWalletAmount.objects.filter(user_id=refer_user.id)
+                        var2=PayByWalletAmount.objects.filter(user=refer_user.id)
                         var2.update(amount=am)
                     else:
+                        print(am)
                         var1 = PayByWalletAmount(user_id=refer_user.id, amount=am)
                         var1.save()
                 else:
@@ -551,7 +553,7 @@ class WalletAddView(viewsets.ViewSet):
         stu.delete()
         return Response({'msg': 'Data deleted'})
     
-    
+   
 class WalletAmtView(viewsets.ViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record
@@ -569,6 +571,27 @@ class WalletAmtView(viewsets.ViewSet):
 
     def create(self, request):
         serializer = WalletAmtSerializer(data = request.data)  # form data conviert in json data
+        prod = WalletAmt.objects.filter(user=request.data['user'])
+        tik = BuyTicket.objects.filter(userid=request.data['user'])
+        withdr = WithdrawRequest.objects.Filter(user=request.data['user'])
+        his = 0
+        for j in tik:
+            his += float(j.order_price)
+        c = 0
+        for i in prod:
+            c = c + float(i.amount)
+        w=0
+        for k in withdr:
+            w = w + float(k.amount)
+        uss=PayByWalletAmount.objects.filter(user=request.data['user']).exists()
+        am = float(c)+float(request.data['amount'])-float(his)-float(w)
+        if uss:
+            var2=PayByWalletAmount.objects.filter(user=request.data['user'])
+            var2.update(amount=am)
+        else:
+            print(am)
+            var1 = PayByWalletAmount(user_id=request.data['user'], amount=am)
+            var1.save()
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
@@ -597,17 +620,14 @@ class WalletAmtView(viewsets.ViewSet):
         stu = WalletAmt.objects.get(pk=id)
         stu.delete()
         return Response({'msg': 'Data deleted'})
-
-
-    
+  
 class PayByWalletAmountView(viewsets.ViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     def list(self, request):      # list - get all record
         stu = PayByWalletAmount.objects.all()
         serializer = PayByWalletAmountSerializer(stu, many=True)    # many use for bulk data come 
         return Response(serializer.data)
-
-
+    
     def retrieve(self, request, pk=None):
         id = pk
         if id is not None:
@@ -949,7 +969,54 @@ class ComplimentFilterView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             raise AuthenticationFailed('Invalid ID, try again')
-        
+
+   
+class TicketView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = Ticket.objects.all()
+        serializer = TicketSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = Ticket.objects.get(id=id)
+            serializer = TicketSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = TicketPostSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created','id':serializer.data['id']}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = Ticket.objects.get(pk=id)
+        serializer = TicketSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = Ticket.objects.get(pk=id)
+        serializer = TicketSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = Ticket.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+
    
 class ClaimRuleView(viewsets.ViewSet):
     permission_classes = (permissions.IsAuthenticated,)
@@ -1148,3 +1215,83 @@ class NotificationFilterView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             raise AuthenticationFailed('Invalid ID, try again') 
+        
+class TicketFilterView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request,id):
+        if NewGame.objects.filter(id=id).exists():
+            obj=Ticket.objects.filter(game_id=id)
+            serializer = TicketSerializer(obj,many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            raise AuthenticationFailed('Invalid ID, try again')
+        
+
+class BuyTicketView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = BuyTicket.objects.all()
+        serializer = BuyTicketSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = BuyTicket.objects.get(id=id)
+            serializer = BuyTicketSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = BuyTicketPostSerializer(data = request.data)  # form data conviert in json data
+        prod = WalletAmt.objects.filter(user=request.data['user'])
+        tik = BuyTicket.objects.filter(userid=request.data['user'])
+        withdr = WithdrawRequest.objects.Filter(user=request.data['user'])
+        his = 0
+        for j in tik:
+            his += float(j.order_price)
+        c = 0
+        for i in prod:
+            c = c + float(i.amount)
+        w=0
+        for k in withdr:
+            w = w + float(k.amount)
+        uss=PayByWalletAmount.objects.filter(user=request.data['user']).exists()
+        am = float(c)+float(request.data['order_price'])-float(his)-float(w)
+        if uss:
+            var2=PayByWalletAmount.objects.filter(user=request.data['user'])
+            var2.update(amount=am)
+        else:
+            print(am)
+            var1 = PayByWalletAmount(user_id=request.data['user'], amount=am)
+            var1.save()
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created','ticket_id':serializer.data['ticketid'],'user_id':serializer.data['userid']}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def update(self, request, pk):
+        id = pk
+        stu = BuyTicket.objects.get(pk=id)
+        serializer = BuyTicketSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = BuyTicket.objects.get(pk=id)
+        serializer = BuyTicketSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = BuyTicket.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+

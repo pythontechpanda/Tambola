@@ -145,6 +145,11 @@ class TicketSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = '__all__'
 
+class TicketPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = '__all__'
+
 class ComplimentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Compliment
@@ -318,4 +323,14 @@ class BankDetailSerializer(serializers.ModelSerializer):
 class BankDetailPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BankDetail
+        fields = '__all__'
+
+class BuyTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BuyTicket
+        fields = '__all__'
+        
+class BuyTicketPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BuyTicket
         fields = '__all__'

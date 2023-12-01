@@ -19,10 +19,7 @@ urlpatterns = [
     path('MyGame/<int:id>/',views.MyGameFilterView.as_view(),name="MyGame"),
     path('Compliment/<int:id>/',views.ComplimentFilterView.as_view(),name="Compliment"),
     path('Notification/<int:id>/',views.NotificationFilterView.as_view(),name="Notification"),
-
-
-
-
+    path('Ticket/<int:id>/',views.TicketFilterView.as_view(),name="Ticket"),
 
 
 ]

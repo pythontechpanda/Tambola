@@ -89,6 +89,7 @@ class HelpAndSupport(models.Model):
     screenshot=models.FileField(upload_to ='helpandsupport', default='helpandsupport/helpandsupport.png')
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now=True)
+    is_completed=models.BooleanField(default=False)
     
     def __str__(self):
         return self.subject
@@ -135,6 +136,7 @@ class Ticket(models.Model):
     assign_to=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     game=models.ForeignKey(NewGame,on_delete=models.CASCADE)
     value=models.JSONField(default=[])
+    pattern=models.JSONField(default=[])
     is_winner=models.BooleanField(default=False)
     is_paid=models.BooleanField(default=False)
 
@@ -162,6 +164,7 @@ class Notification(models.Model):
 class WithdrawRequest(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     amount=models.CharField(max_length=100)
+    is_completed=models.BooleanField(default=False)
     created_at=models.DateTimeField(auto_now=True)
 
 class BankDetail(models.Model):
@@ -170,3 +173,14 @@ class BankDetail(models.Model):
     bank_account_holder_name=models.CharField(max_length=200)
     ifsc_code=models.CharField(max_length=100)
     branch_name=models.CharField(max_length=200)
+
+ 
+class BuyTicket(models.Model):
+    ticketid = models.ForeignKey(Ticket,on_delete=models.CASCADE)
+    userid = models.ForeignKey(User,on_delete=models.CASCADE)
+    orderdate = models.DateTimeField(auto_now=True)
+    order_status = models.BooleanField(default=False)
+    order_price = models.CharField(max_length=200, null=True)
+    razor_pay_order_id = models.CharField(max_length=100, null=True, blank=True)
+    razor_pay_payment_id = models.CharField(max_length=100, null=True, blank=True)
+    razor_pay_payment_signature = models.CharField(max_length=100, null=True, blank=True)

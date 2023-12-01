@@ -37,7 +37,8 @@ router.register('ClaimRule', views.ClaimRuleView, basename='ClaimRule'),
 router.register('Notification', views.NotificationView, basename='Notification'),
 router.register('WithdrawRequest', views.WithdrawRequestView, basename='WithdrawRequest'),
 router.register('BankDetail', views.BankDetailView, basename='BankDetail'),
-
+router.register('buy-ticket', views.BuyTicketView, basename='buy-ticket'),
+router.register('Ticket', views.TicketView, basename='Ticket'),
 
 
 urlpatterns = [
