@@ -47,13 +47,13 @@ class User(AbstractUser):
 
 class Game_Rule(models.Model):
     sample_ticket=models.FileField(upload_to ='ticket', default='ticket/sample.png')
-    name=models.CharField(max_length=50,null=True,unique=True)
+    rule=models.CharField(max_length=50,null=True,unique=True)
     description=models.TextField()
     user=models.ForeignKey(User,on_delete=models.CASCADE, null=True)
     is_active=models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return self.rule
 
 class NewGame(models.Model):
     game_name=models.CharField(max_length=100,null=True,unique=True)
@@ -147,12 +147,21 @@ class Compliment(models.Model):
     created_at=models.DateTimeField(auto_now=True)
 
 class ClaimRule(models.Model):
+
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     rule=models.ForeignKey(Game_Rule,on_delete=models.CASCADE)
     game=models.ForeignKey(NewGame,on_delete=models.CASCADE)
+    ticket=models.ForeignKey(Ticket,on_delete=models.CASCADE)
     counter_array=models.JSONField(default=[])
     check_claim=models.BooleanField(default=False)
     claim_at=models.DateTimeField(auto_now=True)
+
+
+
+class GameCounter(models.Model):
+    game=models.ForeignKey(NewGame,on_delete=models.CASCADE)
+    counter_array=models.JSONField(default=[])
+
 
 class Notification(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

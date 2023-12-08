@@ -20,6 +20,9 @@ urlpatterns = [
     path('Compliment/<int:id>/',views.ComplimentFilterView.as_view(),name="Compliment"),
     path('Notification/<int:id>/',views.NotificationFilterView.as_view(),name="Notification"),
     path('Ticket/<int:id>/',views.TicketFilterView.as_view(),name="Ticket"),
-
+    path('GamePlaying/',views.GamePlayingFilterView.as_view(),name="GamePlaying"),
+    path('TransectionHistory/<int:id>/',views.TransectionHistoryFilterView.as_view(),name="TransectionHistory"),
+    path('GameEnd/<int:id>/',views.GameEndFilterView.as_view(),name="GameEnd"),
+    
 
 ]

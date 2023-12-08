@@ -24,6 +24,7 @@ class LoginSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=255, min_length=3)
     tokens = serializers.SerializerMethodField()
     otp = serializers.SerializerMethodField()
+    wallet_amount = serializers.SerializerMethodField()
     def get_tokens(self, obj):
         user = User.objects.get(username=obj['username'])
         return {
@@ -33,9 +34,18 @@ class LoginSerializer(serializers.ModelSerializer):
     def get_otp(self, obj):
         randomNumber = random.randint(1000, 9999)
         return randomNumber
+    
+    def get_wallet_amount(self, obj):
+        user = User.objects.get(username=obj['username'])
+        if PayByWalletAmount.objects.filter(user=user.id).exists():
+            userwallet = PayByWalletAmount.objects.get(user=user.id)
+            wlt = userwallet.amount
+        else:
+            wlt = 0
+        return wlt
     class Meta:
         model = User
-        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18','refer_code','refer_by','my_code','otp','tokens']
+        fields = ['id','username', 'profile_picture', 'first_name','city','gender','date_of_birth','mobile_no','is_verified','is_above18','refer_code','refer_by','my_code','otp','wallet_amount','tokens']
     def validate(self, attrs):
         username = attrs.get('username','')
         # password = attrs.get('password','')
@@ -45,6 +55,7 @@ class LoginSerializer(serializers.ModelSerializer):
                 raise AuthenticationFailed('Account disabled, contact admin')
             if not user.is_above18:
                 raise AuthenticationFailed('Age must be minimum of 18 years')
+            
             return {
                 'id': user.id,
                 'first_name': user.first_name,
@@ -334,3 +345,93 @@ class BuyTicketPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = BuyTicket
         fields = '__all__'
+
+class GameCounterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameCounter
+        fields = '__all__'
+
+class GameCounterPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameCounter
+        fields = '__all__'
+
+
+class TransectionHistorySerializer(serializers.Serializer):
+    Game_Status=serializers.CharField(max_length=100)
+    Pay_Status=serializers.CharField(max_length=100)
+    Amount=serializers.CharField(max_length=100)
+    DateTime=serializers.DateTimeField()
+
+
+
+class ClaimedSerializer(serializers.Serializer):
+    game_id=serializers.IntegerField()
+    game_name=serializers.CharField(max_length=100)
+    message_for_player=serializers.CharField(max_length=255)
+    lobby=serializers.CharField(max_length=25)
+    ticket_cost=serializers.CharField(max_length=25)
+    start_at=serializers.DateTimeField()
+    ticket_request_till=serializers.DateTimeField()
+    number_of_ticket=serializers.IntegerField()
+    timer=serializers.CharField(max_length=255)
+    private_code=serializers.CharField(max_length=255)
+    # game_counter=serializers.CharField(max_length=255)
+    is_completed=serializers.BooleanField()
+    # created_at=serializers.BooleanField()
+    user_id= serializers.IntegerField()
+    first_name= serializers.CharField(max_length=255)
+    username= serializers.CharField(max_length=255)
+    profile_picture=serializers.CharField(max_length=255)
+    city=serializers.CharField(max_length=255)
+    gender=serializers.CharField(max_length=255)
+    date_of_birth=serializers.CharField(max_length=255)
+    mobile_no=serializers.CharField(max_length=255)
+    is_verified=serializers.BooleanField()
+    is_above18=serializers.BooleanField()
+    refer_code=serializers.CharField(max_length=255)
+    refer_by=serializers.CharField(max_length=255)
+    my_code=serializers.CharField(max_length=255)
+    played=serializers.IntegerField()
+    created=serializers.IntegerField()
+    rule=serializers.CharField(max_length=255)
+    rule_amount=serializers.CharField(max_length=255)
+
+
+class ClmSerializer(serializers.Serializer):
+    # game_id=serializers.IntegerField()
+    # game_name=serializers.CharField(max_length=100)
+    # message_for_player=serializers.CharField(max_length=255)
+    # lobby=serializers.CharField(max_length=25)
+    # ticket_cost=serializers.CharField(max_length=25)
+    # start_at=serializers.DateTimeField()
+    # ticket_request_till=serializers.DateTimeField()
+    # number_of_ticket=serializers.IntegerField()
+    # timer=serializers.CharField(max_length=255)
+    # private_code=serializers.CharField(max_length=255)
+    # # game_counter=serializers.CharField(max_length=255)
+    # is_completed=serializers.BooleanField()
+    # created_at=serializers.BooleanField()
+    user_id= serializers.IntegerField()
+    first_name= serializers.CharField(max_length=255)
+    username= serializers.CharField(max_length=255)
+    profile_picture=serializers.CharField(max_length=255)
+    city=serializers.CharField(max_length=255)
+    gender=serializers.CharField(max_length=255)
+    date_of_birth=serializers.CharField(max_length=255)
+    mobile_no=serializers.CharField(max_length=255)
+    is_verified=serializers.BooleanField()
+    is_above18=serializers.BooleanField()
+    refer_code=serializers.CharField(max_length=255)
+    refer_by=serializers.CharField(max_length=255)
+    my_code=serializers.CharField(max_length=255)
+    played=serializers.IntegerField()
+    created=serializers.IntegerField()
+    claim_count=serializers.CharField(max_length=255)
+    claim_amount=serializers.CharField(max_length=255)
+
+class ClaimRuleGameEndSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClaimRule
+        fields = '__all__'
+        depth =2

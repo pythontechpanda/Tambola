@@ -39,6 +39,8 @@ router.register('WithdrawRequest', views.WithdrawRequestView, basename='Withdraw
 router.register('BankDetail', views.BankDetailView, basename='BankDetail'),
 router.register('buy-ticket', views.BuyTicketView, basename='buy-ticket'),
 router.register('Ticket', views.TicketView, basename='Ticket'),
+router.register('GameCounter', views.GameCounterView, basename='GameCounter'),
+
 
 
 urlpatterns = [

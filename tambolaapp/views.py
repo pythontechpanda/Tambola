@@ -9,6 +9,8 @@ from .models import *
 from rest_framework.views import APIView
 from datetime import datetime
 import pytz
+from ast import literal_eval
+import operator
 
 
 # Create your views here.
@@ -21,7 +23,8 @@ class RegisterView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
-        if user_data['refer_code'] != 0:
+        print(type(user_data['refer_code']))
+        if user_data['refer_code'] != '0':
             refer_user=User.objects.get(my_code=user_data['refer_code'])
             refer_by_user_update=User.objects.filter(id=user_data['id'])
             refer_by_user_update.update(refer_by=refer_user.username)
@@ -260,12 +263,40 @@ class NewGameView(viewsets.ViewSet):
 
                 rw=row_elements(col)
                 print('rw',rw)
+                k=[]
+                u=[]
+                for i in rw:
+                        u.append(i[0])
+                ro=random.sample(u, 5)
+                ro.sort()
+                print('1',ro)
+                k.append(ro)
+                for i in ro:
+                    u.remove(i)
+                # print(u)
+                for i in rw:
+                    if len(i)>1:
+                        u.append(i[1])
+                    else:
+                        pass
+                # print(u)
+                ro=random.sample(u, 5)
+                ro.sort()
+                print('2',ro)
+                k.append(ro)
+                for i in ro:
+                    u.remove(i)
+                u.sort()
+                print('3',u)
+                k.append(u)
 
-                tk=Ticket(game_id=serializer.data['id'],assign_to_id=1,value=rw)
+                print(k)
+
+                tk=Ticket(game_id=serializer.data['id'],assign_to_id=1,value=k)
                 tk.save()
                 user_referal=User.objects.get(id=serializer.data['user'])
                 print('>>>>>>>>>',user_referal.refer_code)
-                if user_referal.refer_code != 0:
+                if user_referal.refer_code != '0':
                     refer_user=User.objects.get(my_code=user_referal.refer_code)
                     user_wallet=WalletAdd(user_id=refer_user.id,walletamount=1,walletstatus=True)
                     user_wallet.save()
@@ -275,7 +306,7 @@ class NewGameView(viewsets.ViewSet):
                     user_walletAmt.save()
                     prod = WalletAmt.objects.filter(user=refer_user.id)
                     tik = BuyTicket.objects.filter(userid=refer_user.id)
-                    withdr = WithdrawRequest.objects.Filter(user=refer_user.id,is_completed=True)
+                    withdr = WithdrawRequest.objects.filter(user_id=refer_user.id,is_completed=True)
                     his = 0
                     for j in tik:
                         his += float(j.order_price)
@@ -296,7 +327,7 @@ class NewGameView(viewsets.ViewSet):
                         var1.save()
                 else:
                     pass
-            return Response({'msg': 'Data Created'}, status= status.HTTP_201_CREATED)
+            return Response({'msg': 'Data Created','id':serializer.data['id']}, status= status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk):
@@ -573,7 +604,7 @@ class WalletAmtView(viewsets.ViewSet):
         serializer = WalletAmtSerializer(data = request.data)  # form data conviert in json data
         prod = WalletAmt.objects.filter(user=request.data['user'])
         tik = BuyTicket.objects.filter(userid=request.data['user'])
-        withdr = WithdrawRequest.objects.Filter(user=request.data['user'])
+        withdr = WithdrawRequest.objects.Filter(user=request.data['user'],is_completed=True)
         his = 0
         for j in tik:
             his += float(j.order_price)
@@ -676,7 +707,7 @@ class JoinAGameFilterView(APIView):
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         else:
             raise AuthenticationFailed('Invalid Code, try again')
- 
+
 
 class HomeFilterView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -740,7 +771,7 @@ class HomeFilterView(APIView):
                 end_time =k.start_at.replace(tzinfo=utc)
                 if end_time < start_time and k.is_completed==False:                   
                     # live.append(k)
-                    obj=NewGame.objects.filter(user_id=k.user.id).count()
+                    obj1=NewGame.objects.filter(user_id=k.user.id).count()
 
                     played_ticket=Ticket.objects.filter(assign_to_id=k.user.id)
                     played=[]
@@ -777,11 +808,73 @@ class HomeFilterView(APIView):
                                             'refer_by':k.user.refer_by,
                                             'my_code':k.user.my_code,
                                             'played':len(played),
-                                            'created':obj})
+                                            'created':obj1})
                     live.append(livedetail)
             liveserializer = LiveSerializer(live,many=True)
 
-            return Response({'Upcoming':up.data,'Live':liveserializer.data})
+            clm=[]
+            userclaim=User.objects.all()
+            for k in userclaim:
+                clmdetail={}
+                if ClaimRule.objects.filter(user=k.id).exists():
+                    cl=ClaimRule.objects.filter(user=k.id).count()
+                    clam=ClaimRule.objects.filter(user=k.id)
+                    amm=0
+                    for x in clam:
+
+                        if RuleInGame.objects.filter(rule=x.rule,game=x.game).exists():
+                            rl=RuleInGame.objects.get(rule=x.rule,game=x.game)
+                            amm=amm+float(rl.price)
+                        else:
+                            pass
+
+
+                    obj=NewGame.objects.filter(user_id=k.id).count()
+
+                    played_ticket=Ticket.objects.filter(assign_to_id=k.id)
+                    played=[]
+                    for j in played_ticket:
+                        if j.game in played:
+                            pass
+                        else:
+                            played.append(j.game)
+                    clmdetail.update({
+                    # 'game_id':k.id,
+                    #                 'game_name':k.game_name,
+                    #                 'message_for_player':k.message_for_player,
+                    #                 'lobby':k.lobby,
+                    #                 'ticket_cost':k.ticket_cost,
+                    #                 'start_at':k.start_at,
+                    #                 'ticket_request_till':k.ticket_request_till,
+                    #                 'number_of_ticket':k.number_of_tickets,
+                    #                 'timer':k.timer,
+                    #                 'private_code':k.private_code,
+                    #             #    'game_counter':k.game_counter,
+                    #                 'is_completed':k.is_completed,
+                    #             #    'created_at':k.created_at,
+                                    'user_id': k.id,
+                                    'first_name': k.first_name,
+                                    'username': k.username,
+                                    'profile_picture':k.profile_picture,
+                                    'city':k.city.city_name,
+                                    'gender':k.gender,
+                                    'date_of_birth':k.date_of_birth,
+                                    'mobile_no':k.mobile_no,
+                                    'is_verified':k.is_verified,
+                                    'is_above18':k.is_above18,
+                                    'refer_code':k.refer_code,
+                                    'refer_by':k.refer_by,
+                                    'my_code':k.my_code,
+                                    'played':len(played),
+                                    'created':obj,
+                                    'claim_count':cl,
+                                    'claim_amount':amm})
+                    clm.append(clmdetail)
+                else:
+                    pass
+            transort=sorted(clm, key=operator.itemgetter('claim_amount'), reverse = True)
+            clmserializer = ClmSerializer(transort,many=True)
+            return Response({'Upcoming':up.data,'Live':liveserializer.data,'Leader_Board':clmserializer.data})
         else:
             raise AuthenticationFailed('Invalid ID, try again')
         
@@ -909,7 +1002,60 @@ class MyGameFilterView(APIView):
                 played.append(playeddetail)
             playedserializer = PlayedSerializer(played,many=True)
 
-            return Response({'Created':createdserializer.data,'Played':playedserializer.data})
+            claimed=ClaimRule.objects.filter(user=id)
+            
+            clmed=[]
+            for i in claimed:
+                print(i.rule,i.user)
+                clmeddetail={}
+            
+                objcount=NewGame.objects.filter(user_id=i.game.user.id).count()
+
+                played_ticket1=Ticket.objects.filter(assign_to_id=i.game.user.id)
+                played1=[]
+                for j in played_ticket1:
+                    if j.game in played1:
+                        pass
+                    else:
+                        played1.append(j.game)
+
+                rule=RuleInGame.objects.get(rule=i.rule,game=i.game)
+                clmeddetail.update({'game_id':i.game.id,
+                                        'game_name':i.game.game_name,
+                                        'message_for_player':i.game.message_for_player,
+                                        'lobby':i.game.lobby,
+                                        'ticket_cost':i.game.ticket_cost,
+                                        'start_at':i.game.start_at,
+                                        'ticket_request_till':i.game.ticket_request_till,
+                                        'number_of_ticket':i.game.number_of_tickets,
+                                        'timer':i.game.timer,
+                                        'private_code':i.game.private_code,
+                                    #    'game_counter':i.game.game_counter,
+                                        'is_completed':i.game.is_completed,
+                                    #    'created_at':i.game.created_at,
+                                        'user_id': i.game.user.id,
+                                        'first_name': i.game.user.first_name,
+                                        'username': i.game.user.username,
+                                        'profile_picture':i.game.user.profile_picture,
+                                        'city':i.game.user.city.city_name,
+                                        'gender':i.game.user.gender,
+                                        'date_of_birth':i.game.user.date_of_birth,
+                                        'mobile_no':i.game.user.mobile_no,
+                                        'is_verified':i.game.user.is_verified,
+                                        'is_above18':i.game.user.is_above18,
+                                        'refer_code':i.game.user.refer_code,
+                                        'refer_by':i.game.user.refer_by,
+                                        'my_code':i.game.user.my_code,
+                                        'played':len(played1),
+                                        'created':objcount,
+                                        'rule':rule.rule.rule,
+                                        'rule_amount':rule.price})
+
+                clmed.append(clmeddetail)
+               
+            clmedserializer = ClaimedSerializer(clmed,many=True)
+
+            return Response({'Created':createdserializer.data,'Played':playedserializer.data,'Claimed':clmedserializer.data})
         else:
             raise AuthenticationFailed('Invalid ID, try again')
         
@@ -1035,6 +1181,36 @@ class ClaimRuleView(viewsets.ViewSet):
 
     def create(self, request):
         serializer = ClaimRulePostSerializer(data = request.data)  # form data conviert in json data
+        claim_rule=RuleInGame.objects.get(rule_id=int(request.data['rule']),game_id=int(request.data['game']))
+        print(claim_rule.price)
+        user_wallet=WalletAdd(user_id=request.data['user'],walletamount=claim_rule.price,walletstatus=True)
+        user_wallet.save()
+        user_walletAmt=WalletAmt(walt_id = user_wallet.id,user_id = request.data['user'],payment_status = True,
+                                    amount = claim_rule.price,razor_pay_order_id = 'Claim',
+                                    razor_pay_payment_id = 'Claim',razor_pay_payment_signature = 'Claim')
+        user_walletAmt.save()
+        
+        prod = WalletAmt.objects.filter(user=request.data['user'])
+        tik = BuyTicket.objects.filter(userid=request.data['user'])
+        withdr = WithdrawRequest.objects.filter(user=request.data['user'],is_completed=True)
+        his = 0
+        for j in tik:
+            his += float(j.order_price)
+        c = 0
+        for i in prod:
+            c = c + float(i.amount)
+        w=0
+        for k in withdr:
+            w = w + float(k.amount)
+        uss=PayByWalletAmount.objects.filter(user=request.data['user']).exists()
+        am = float(c)+float(claim_rule.price)-float(his)-float(w)
+        if uss:
+            var2=PayByWalletAmount.objects.filter(user=request.data['user'])
+            var2.update(amount=am)
+        else:
+            print(am)
+            var1 = PayByWalletAmount(user_id=request.data['user'], amount=am)
+            var1.save()
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'Data Created','id':serializer.data['id']}, status= status.HTTP_201_CREATED)
@@ -1221,6 +1397,7 @@ class TicketFilterView(APIView):
     def get(self,request,id):
         if NewGame.objects.filter(id=id).exists():
             obj=Ticket.objects.filter(game_id=id)
+            print(obj)
             serializer = TicketSerializer(obj,many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -1246,7 +1423,7 @@ class BuyTicketView(viewsets.ViewSet):
         serializer = BuyTicketPostSerializer(data = request.data)  # form data conviert in json data
         prod = WalletAmt.objects.filter(user=request.data['user'])
         tik = BuyTicket.objects.filter(userid=request.data['user'])
-        withdr = WithdrawRequest.objects.Filter(user=request.data['user'])
+        withdr = WithdrawRequest.objects.Filter(user=request.data['user'],is_completed=True)
         his = 0
         for j in tik:
             his += float(j.order_price)
@@ -1294,4 +1471,247 @@ class BuyTicketView(viewsets.ViewSet):
         stu = BuyTicket.objects.get(pk=id)
         stu.delete()
         return Response({'msg': 'Data deleted'})
+
+    
+class GameCounterView(viewsets.ViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    def list(self, request):      # list - get all record
+        stu = GameCounter.objects.all()
+        serializer = GameCounterSerializer(stu, many=True)    # many use for bulk data come 
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            stu = GameCounter.objects.get(id=id)
+            serializer = GameCounterSerializer(stu)
+            return Response(serializer.data)
+
+    def create(self, request):
+        serializer = GameCounterPostSerializer(data = request.data)  # form data conviert in json data
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Data Created','id':serializer.data['id']}, status= status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk):
+        id = pk
+        stu = GameCounter.objects.get(pk=id)
+        serializer = GameCounterSerializer(stu, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Complete Data Update'})
+        return Response(serializer.errors)
+
+    def partial_update(self, request, pk):
+        id = pk
+        stu = GameCounter.objects.get(pk=id)
+        serializer = GameCounterSerializer(stu, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Partial Data Update'})
+        return Response(serializer.errors)
+
+    def destroy(self, request, pk):
+        id = pk
+        stu = GameCounter.objects.get(pk=id)
+        stu.delete()
+        return Response({'msg': 'Data deleted'})
+ 
+
+class GamePlayingFilterView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def post(self, request, *args, **kwargs):
+        x=literal_eval(request.data['counter_array'])
+        ticket_in_game=Ticket.objects.filter(game=int(request.data['game']))
+        rule_game=RuleInGame.objects.filter(game=int(request.data['game']))
+        rules=[]
+        rules_id=[]
+        rules_tickets=[]
+        for h in rule_game:
+            rules.append(h.rule.rule)
+            rules_id.append(h.rule.id)
+            rules_tickets.append(h.number_of_tickets)
+        claim_on_ticket=[]
+        for i in ticket_in_game:
+            claim_ticket={}
+            t=[]
+            v=i.value
+            for k in v:
+                for j in k:
+                    t.append(j)
+            c=0
+            for l in x:
+                if l in t:
+                    c = c+1
+                else:
+                    pass
+            vrows=i.value
+            crows1=0
+            for g in vrows[0]:
+                if g in x:
+                    crows1+=1
+            crows2=0
+            for g in vrows[1]:
+                if g in x:
+                    crows2+=1
+            crows3=0
+            for g in vrows[2]:
+                if g in x:
+                    crows3+=1
+
+            if 'Early 5' in rules:
+                ind=rules.index('Early 5')
+                if len(x) == 5:
+                    if c == 5:
+                        claim_count=ClaimRule.objects.filter(game=int(request.data['game']),rule_id=rules_id[ind]).count()
+                        if claim_count < int(rules_tickets[ind]):
+                            if ClaimRule.objects.filter(game_id=i.game.id,rule_id=rules_id[ind],
+                                                        ticket_id=i.id,user=i.assign_to.id).exists():
+                                pass
+                            else:
+                                claim_ticket.update({'Rule':'Middle Line','Ticket_id':i.id,
+                                                    'Game_id':i.game.id,'Rule_id':rules_id[ind],
+                                                    'User_id':i.assign_to.id,'Counter_Array':x,
+                                                    'check_claim':True})
+                                if claim_ticket in claim_on_ticket:
+                                    pass
+                                else:
+                                    claim_on_ticket.append(claim_ticket)
+
+            if 'Full House' in rules:
+                ind=rules.index('Full House')
+
+                if c == 15:
+                    claim_count=ClaimRule.objects.filter(game=int(request.data['game']),rule_id=rules_id[ind]).count()
+                    if claim_count < int(rules_tickets[ind]):
+                        if ClaimRule.objects.filter(game_id=i.game.id,rule_id=rules_id[ind],
+                                                        ticket_id=i.id,user=i.assign_to.id).exists():
+                            pass
+                        else:
+                            claim_ticket.update({'Rule':'Middle Line','Ticket_id':i.id,
+                                                    'Game_id':i.game.id,'Rule_id':rules_id[ind],
+                                                    'User_id':i.assign_to.id,'Counter_Array':x,
+                                                    'check_claim':True})
+                            if claim_ticket in claim_on_ticket:
+                                pass
+                            else:
+                                claim_on_ticket.append(claim_ticket)
+
+            if 'Top Line' in rules: 
+                ind=rules.index('Top Line')
+                if crows1 == 5:
+                    claim_count=ClaimRule.objects.filter(game=int(request.data['game']),rule_id=rules_id[ind]).count()
+                    if claim_count < int(rules_tickets[ind]):
+                        if ClaimRule.objects.filter(game_id=i.game.id,rule_id=rules_id[ind],
+                                                        ticket_id=i.id,user=i.assign_to.id).exists():
+                            pass
+                        else:
+                            claim_ticket.update({'Rule':'Middle Line','Ticket_id':i.id,
+                                                    'Game_id':i.game.id,'Rule_id':rules_id[ind],
+                                                    'User_id':i.assign_to.id,'Counter_Array':x,
+                                                    'check_claim':True})
+                            if claim_ticket in claim_on_ticket:
+                                pass
+                            else:
+                                claim_on_ticket.append(claim_ticket)
+            if 'Middle Line' in rules: 
+                ind=rules.index('Middle Line')
+                if crows2 == 5:
+                    claim_count=ClaimRule.objects.filter(game=int(request.data['game']),rule_id=rules_id[ind]).count()
+                    if claim_count < int(rules_tickets[ind]):
+                        if ClaimRule.objects.filter(game_id=i.game.id,rule_id=rules_id[ind],
+                                                        ticket_id=i.id,user=i.assign_to.id).exists():
+                            pass
+                        else:
+                            claim_ticket.update({'Rule':'Middle Line','Ticket_id':i.id,
+                                                    'Game_id':i.game.id,'Rule_id':rules_id[ind],
+                                                    'User_id':i.assign_to.id,'Counter_Array':x,
+                                                    'check_claim':True})
+                            if claim_ticket in claim_on_ticket:
+                                pass
+                            else:
+                                claim_on_ticket.append(claim_ticket)
+
+            if 'Bottom Line' in rules: 
+                ind=rules.index('Bottom Line')
+                if crows3 == 5:
+                    claim_count=ClaimRule.objects.filter(game=int(request.data['game']),rule_id=rules_id[ind]).count()
+                    if claim_count < int(rules_tickets[ind]):
+                        if ClaimRule.objects.filter(game_id=i.game.id,rule_id=rules_id[ind],
+                                                        ticket_id=i.id,user=i.assign_to.id).exists():
+                            pass
+                        else:
+                            claim_ticket.update({'Rule':'Bottom Line','Ticket_id':i.id,
+                                                    'Game_id':i.game.id,'Rule_id':rules_id[ind],
+                                                    'User_id':i.assign_to.id,'Counter_Array':x,
+                                                    'check_claim':True})
+                            if claim_ticket in claim_on_ticket:
+                                pass
+                            else:
+                                claim_on_ticket.append(claim_ticket)
+        return Response({"Result":claim_on_ticket,"Counter_Array":x},status=status.HTTP_201_CREATED)
+
+class TransectionHistoryFilterView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request,id):
+        if User.objects.filter(id=id).exists():
+            prod = WalletAmt.objects.filter(user=id)
+            tik = BuyTicket.objects.filter(userid=id)
+            withdr = WithdrawRequest.objects.filter(user=id,is_completed=True)
+            tran=[]
+            for i in prod:
+                wltamt={}
+                if i.razor_pay_order_id == 'Claim':
+                    wltamt.update({'Game_Status':'Rule Claim',
+                                   'Pay_Status':'Credit',
+                                'Amount' : i.amount,
+                                'DateTime' : i.use_date})
+                    tran.append(wltamt)
+                elif i.razor_pay_order_id == 'Refer':
+                    wltamt.update({'Game_Status':'Refer',
+                                   'Pay_Status':'Credit',
+                                'Amount' : i.amount,
+                                'DateTime' : i.use_date})
+                    tran.append(wltamt)
+                else:
+                    wltamt.update({'Game_Status':'Add to Wallet',
+                                   'Pay_Status':'Credit',
+                                'Amount' : i.amount,
+                                'DateTime' : i.use_date})
+                    tran.append(wltamt)
+            for j in tik:
+                tikbuy={}
+                tikbuy.update({'Game_Status':'Buy a Ticket',
+                                   'Pay_Status':'Debit',
+                                'Amount' : j.order_price,
+                                'DateTime' : j.orderdate})
+                tran.append(tikbuy)
+            for h in withdr:
+                wthdr={}
+                wthdr.update({'Game_Status':'Withdraw',
+                                   'Pay_Status':'Withdraw',
+                                'Amount' : h.amount,
+                                'DateTime' : h.created_at})
+                tran.append(wthdr)
+            transort=sorted(tran, key=operator.itemgetter('DateTime'), reverse = True)
+            serializer = TransectionHistorySerializer(transort,many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            raise AuthenticationFailed('Invalid ID, try again')
+ 
+
+
+class GameEndFilterView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request,id):
+        if NewGame.objects.filter(id=id).exists():
+            obj=ClaimRule.objects.filter(game=id)
+            print(obj)
+            serializer = ClaimRuleGameEndSerializer(obj,many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            raise AuthenticationFailed('Invalid ID, try again')
+ 
 
